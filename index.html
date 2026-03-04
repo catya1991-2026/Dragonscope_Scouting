@@ -52,22 +52,21 @@
       margin: 0 auto;
     }
 
-    /* Match tracker */
-    .match-tracker {
+    .match-tracker, .rankings-card {
       background: #1a1a1a;
       border-radius: 16px;
       padding: 20px;
       margin: 24px 0;
     }
 
-    .match-tracker-header {
+    .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
     }
 
-    .match-tracker-title {
+    .card-title {
       color: #ff8601;
       font-size: 18px;
       font-weight: bold;
@@ -101,12 +100,9 @@
       padding: 14px 16px;
       margin-bottom: 10px;
       text-align: left;
-      position: relative;
     }
 
-    .match-card.current {
-      border: 2px solid #ff8601;
-    }
+    .match-card.current { border: 2px solid #ff8601; }
 
     .match-card-label {
       font-size: 11px;
@@ -118,7 +114,6 @@
 
     .match-card.previous .match-card-label { color: #888; }
     .match-card.current .match-card-label { color: #ff8601; }
-    .match-card.upcoming .match-card-label { color: #4caf50; }
 
     .match-card-name {
       font-size: 18px;
@@ -150,18 +145,9 @@
     .alliance.red .alliance-label { color: #ff6b6b; }
     .alliance.blue .alliance-label { color: #6b9fff; }
 
-    .alliance-teams {
-      font-size: 13px;
-      color: #ccc;
-      line-height: 1.6;
-    }
+    .alliance-teams { font-size: 13px; color: #ccc; line-height: 1.6; }
 
-    .alliance-score {
-      font-size: 20px;
-      font-weight: bold;
-      margin-top: 4px;
-    }
-
+    .alliance-score { font-size: 20px; font-weight: bold; margin-top: 4px; }
     .alliance.red .alliance-score { color: #ff6b6b; }
     .alliance.blue .alliance-score { color: #6b9fff; }
 
@@ -176,13 +162,45 @@
       vertical-align: middle;
     }
 
-    .no-matches {
-      color: #555;
+    /* Rankings table */
+    .rankings-table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 14px;
-      padding: 20px 0;
+      text-align: left;
     }
 
-    .loading {
+    .rankings-table th {
+      color: #ff8601;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 6px 8px;
+      border-bottom: 1px solid #333;
+    }
+
+    .rankings-table td {
+      padding: 8px 8px;
+      border-bottom: 1px solid #222;
+      color: #ccc;
+    }
+
+    .rankings-table tr:last-child td { border-bottom: none; }
+
+    .rankings-table tr.highlight td {
+      color: #ff8601;
+      font-weight: bold;
+    }
+
+    .rank-num {
+      color: #888;
+      font-size: 13px;
+      width: 30px;
+    }
+
+    .team-num { font-weight: bold; color: white; }
+
+    .no-matches, .loading {
       color: #555;
       font-size: 14px;
       padding: 20px 0;
@@ -210,8 +228,8 @@
 
     <!-- Match Tracker -->
     <div class="match-tracker">
-      <div class="match-tracker-header">
-        <span class="match-tracker-title">📡 Live Match Tracker</span>
+      <div class="card-header">
+        <span class="card-title">Live Match Tracker</span>
         <span class="refresh-status" id="refreshStatus">Updating...</span>
       </div>
 
@@ -222,6 +240,14 @@
       <div id="matchDisplay"><div class="loading">Loading matches...</div></div>
     </div>
 
+    <!-- Rankings -->
+    <div class="rankings-card">
+      <div class="card-header">
+        <span class="card-title">Live Rankings</span>
+      </div>
+      <div id="rankingsDisplay"><div class="loading">Loading rankings...</div></div>
+    </div>
+
   </div>
 
   <footer>Developed by Catie | Team 1991</footer>
@@ -229,14 +255,13 @@
   <script>
     const TBA_KEY = "hPV4TxxZ0mxlI6Gd4QmWRSiKFqm4ZwPqiblZR1aweHKWb2iajle8o24HtTzcnJCI";
     const EVENTS = [
-      { key: "2026mabil", name: "2026 Minuteman",   start: "2026-03-05", end: "2026-03-07" },
-      { key: "2026mawne", name: "2026 Western NE",  start: "2026-03-12", end: "2026-03-14" },
-      { key: "2026ctwat", name: "2026 Waterbury",   start: "2026-03-19", end: "2026-03-21" },
-      { key: "2026rikin", name: "2026 URI",          start: "2026-03-26", end: "2026-03-28" },
-      { key: "2026cthar", name: "2026 Hartford",    start: "2026-04-02", end: "2026-04-04" },
+      { key: "2026mabil", name: "2026 Minuteman",  start: "2026-03-05", end: "2026-03-07" },
+      { key: "2026mawne", name: "2026 Western NE", start: "2026-03-12", end: "2026-03-14" },
+      { key: "2026ctwat", name: "2026 Waterbury",  start: "2026-03-19", end: "2026-03-21" },
+      { key: "2026rikin", name: "2026 URI",         start: "2026-03-26", end: "2026-03-28" },
+      { key: "2026cthar", name: "2026 Hartford",   start: "2026-04-02", end: "2026-04-04" },
     ];
 
-    // Populate event dropdown and auto-select by date
     function populateEvents() {
       const select = document.getElementById('eventSelect');
       const today = new Date().toISOString().split('T')[0];
@@ -248,10 +273,7 @@
         opt.value = ev.key;
         opt.textContent = ev.name;
         select.appendChild(opt);
-        // Auto-select if today falls within the event dates
-        if (today >= ev.start && today <= ev.end) {
-          defaultKey = ev.key;
-        }
+        if (today >= ev.start && today <= ev.end) defaultKey = ev.key;
       });
 
       select.value = defaultKey;
@@ -279,8 +301,7 @@
       const redWon = m.winning_alliance === 'red';
       const blueWon = m.winning_alliance === 'blue';
       const played = m.actual_time !== null;
-
-      const labels = { previous: '⏮ Previous Match', current: '▶ Current Match', upcoming: '⏭ Up Next' };
+      const labels = { previous: '⏮ Previous Match', current: '▶ Up Next' };
 
       return `
         <div class="match-card ${type}">
@@ -312,34 +333,28 @@
         const matches = await tbaFetch(`/event/${eventKey}/matches`);
 
         if (!matches || matches.length === 0) {
-          display.innerHTML = '<div class="no-matches">No matches found for this event yet.</div>';
+          display.innerHTML = '<div class="no-matches">🕐 Event not started yet — check back once matches begin!</div>';
           return;
         }
 
-        // Sort by time
         matches.sort((a, b) => (a.predicted_time || a.time || 0) - (b.predicted_time || b.time || 0));
 
         const played = matches.filter(m => m.actual_time !== null);
         const upcoming = matches.filter(m => m.actual_time === null);
 
-        const prevMatch = played.length > 0 ? played[played.length - 1] : null;
-        const nextMatch = upcoming.length > 0 ? upcoming[0] : null;
-        const currentMatch = upcoming.length > 0 ? upcoming[0] : (played.length > 0 ? played[played.length - 1] : null);
-
-        // If there are upcoming matches, current = next up, previous = last played
-        // If all done, current = last played
         let html = '';
         if (upcoming.length > 0) {
+          const prevMatch = played.length > 0 ? played[played.length - 1] : null;
           html += renderMatch(prevMatch, 'previous');
-          html += renderMatch(nextMatch, 'current');
+          html += renderMatch(upcoming[0], 'current');
         } else {
-          html += renderMatch(played.length > 1 ? played[played.length - 2] : null, 'previous');
-          html += renderMatch(prevMatch, 'current');
+          const prevMatch = played.length > 1 ? played[played.length - 2] : null;
+          html += renderMatch(prevMatch, 'previous');
+          html += renderMatch(played[played.length - 1], 'current');
         }
 
         display.innerHTML = html || '<div class="no-matches">No match data available yet.</div>';
 
-        // Update refresh status
         const now = new Date();
         document.getElementById('refreshStatus').textContent =
           `Updated ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
@@ -350,15 +365,72 @@
       }
     }
 
+    async function loadRankings() {
+      const eventKey = document.getElementById('eventSelect').value;
+      if (!eventKey) return;
+
+      const display = document.getElementById('rankingsDisplay');
+
+      try {
+        const data = await tbaFetch(`/event/${eventKey}/rankings`);
+
+        if (!data || !data.rankings || data.rankings.length === 0) {
+          display.innerHTML = '<div class="no-matches">🕐 Rankings not available yet.</div>';
+          return;
+        }
+
+        const rankings = data.rankings;
+        // Highlight team 1991 and allied scouting teams
+        const highlightTeams = ['frc1991', 'frc10063', 'frc1071'];
+
+        let rows = rankings.map(r => {
+          const teamKey = r.team_key;
+          const teamNum = teamKey.replace('frc', '');
+          const isHighlight = highlightTeams.includes(teamKey);
+          return `
+            <tr class="${isHighlight ? 'highlight' : ''}">
+              <td class="rank-num">${r.rank}</td>
+              <td class="team-num">${teamNum}</td>
+              <td>${r.record ? `${r.record.wins}-${r.record.losses}-${r.record.ties}` : '—'}</td>
+              <td>${r.sort_orders ? r.sort_orders[0].toFixed(2) : '—'}</td>
+            </tr>
+          `;
+        }).join('');
+
+        display.innerHTML = `
+          <table class="rankings-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team</th>
+                <th>W-L-T</th>
+                <th>RP</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+
+      } catch (err) {
+        display.innerHTML = '<div class="no-matches">Could not load rankings. Check connection.</div>';
+        console.error(err);
+      }
+    }
+
+    function loadAll() {
+      loadMatches();
+      loadRankings();
+    }
+
     // Init
     populateEvents();
-    loadMatches();
+    loadAll();
 
     // Re-load when event changes
-    document.getElementById('eventSelect').addEventListener('change', loadMatches);
+    document.getElementById('eventSelect').addEventListener('change', loadAll);
 
     // Auto-refresh every 60 seconds
-    setInterval(loadMatches, 60000);
+    setInterval(loadAll, 60000);
   </script>
 
 </body>
