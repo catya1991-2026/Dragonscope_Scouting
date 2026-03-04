@@ -161,7 +161,6 @@
     <h1 class="form-title">Pit Scouting</h1>
     <form id="pitForm">
 
-      <h2 class="section-header">Event & Team</h2>
       <hr class="section-divider">
 
       <label class="form-label">Event</label>
@@ -179,7 +178,6 @@
         <option value="">Select an event first...</option>
       </select>
 
-      <h2 class="section-header">Scouter Info</h2>
       <hr class="section-divider">
 
       <label class="form-label">Scouter Name</label>
@@ -191,8 +189,7 @@
         <option value="10063">10063</option>
         <option value="1071">1071</option>
       </select>
-
-      <h2 class="section-header">Drivetrain</h2>
+      
       <hr class="section-divider">
 
       <label class="form-label">Drive Train Type</label>
@@ -237,26 +234,31 @@
         <div class="form-checkbox-row"><input type="checkbox" name="steer_motor" value="Other"><span>Other</span></div>
       </div>
 
-      <h2 class="section-header">Robot Specs</h2>
       <hr class="section-divider">
 
       <label class="form-label">Robot Width (inches)</label>
-      <input class="form-input" type="text" id="robot_width" placeholder="e.g. 28">
+      <input class="form-input" type="text" id="robot_width">
 
       <label class="form-label">Robot Length (inches)</label>
-      <input class="form-input" type="text" id="robot_length" placeholder="e.g. 32">
+      <input class="form-input" type="text" id="robot_length">
 
       <label class="form-label">Robot Weight (with battery & bumpers)</label>
-      <input class="form-input" type="text" id="robot_weight" placeholder="e.g. 125 lbs">
+      <input class="form-input" type="text" id="robot_weight">
 
-      <h2 class="section-header">Autonomous</h2>
+      <label class="form-label">Where do they intake from?</label>
+      <select class="form-input" id="intake">
+        <option value="">Select...</option>
+        <option value="yes">Ground</option>
+        <option value="no">Chute</option>
+      </select>
+
       <hr class="section-divider">
 
       <label class="form-label">How many autos do they have?</label>
-      <input class="form-input" type="text" id="auto_count" placeholder="e.g. 3">
+      <input class="form-input" type="text" id="auto_count">
 
       <label class="form-label">Describe their preferred auto</label>
-      <input class="form-input" type="text" id="auto_description" placeholder="e.g. 4 note center">
+      <input class="form-input" type="text" id="auto_description">
 
       <label class="form-label">Where do they start for auto?</label>
       <select class="form-input" id="auto_start">
@@ -273,11 +275,10 @@
         <option value="no">No</option>
       </select>
 
-      <h2 class="section-header">Gameplay</h2>
       <hr class="section-divider">
 
       <label class="form-label">What is their maximum fuel capacity?</label>
-      <input class="form-input" type="text" id="fuel_capacity" placeholder="e.g. 5 notes">
+      <input class="form-input" type="text" id="fuel_capacity">
 
       <label class="form-label">Can they go over the bump?</label>
       <select class="form-input" id="bump">
@@ -294,9 +295,8 @@
       </select>
 
       <label class="form-label">What is their average fuel scored per alliance shift?</label>
-      <input class="form-input" type="text" id="avg_fuel" placeholder="e.g. 8">
+      <input class="form-input" type="text" id="avg_fuel">
 
-      <h2 class="section-header">Automation</h2>
       <hr class="section-divider">
 
       <label class="form-label">Do they use automation? (vision, sensors, limit switches, etc.)</label>
@@ -309,7 +309,21 @@
       <label class="form-label">How do they use automation?</label>
       <input class="form-input" type="text" id="automation_description" placeholder="e.g. Limelight for note tracking">
 
-      <h2 class="section-header">Notes</h2>
+      <hr class="section-divider">
+      
+      <label class="form-label">Where can they climb?</label>
+      <select class="form-input" id="climb">
+        <option value="">Select...</option>
+        <option value="yes">Level 1</option>
+        <option value="no">Level 2</option>
+        <option value="yes">Level 3</option>
+        <option value="no">All</option>
+        <option value="yes">None</option>
+      </select>
+
+    <label class="form-label">Please describe their climb & preferred climb location (Right side, Left side, center front, center back, etc.)</label>
+      <input class="form-input" type="text" id="climbs">
+      
       <hr class="section-divider">
 
       <label class="form-label">Additional Notes</label>
@@ -420,3 +434,4 @@
 
 </body>
 </html>
+
