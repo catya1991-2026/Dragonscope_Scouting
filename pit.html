@@ -151,30 +151,72 @@
       <select class="form-input" id="team" disabled>
         <option value="">Select an event first...</option>
       </select>
-
+      
       <hr class="section-divider">
 
       <label class="form-label">Scouter Name</label>
       <input class="form-input" type="text">
 
+       <label class="form-label">Scouter Team</label>
+      <input class="form-input" type="text">
+
+      <hr class="section-divider">
+      
+      <label class="form-label">Drive Train Type</label>
+      <input class="form-input">
+        <option value"">Select Drive Train Type...</option> 
+        <option value="swerve">Swerve Drive</option>
+        <option value="tank">Tank Drive</option>
+        <option value="mecanum">Mecanum Drive</option>
+    </select>
+
       <label class="form-label">Robot Width (inches)</label>
-      <input class="form-input" type="number">
+      <input class="form-input" type="text">
 
       <label class="form-label">Robot Length (inches)</label>
-      <input class="form-input" type="number">
+      <input class="form-input" type="text">
 
-      <label class="form-label">Robot Drivebase Type</label>
+      <label class="form-label">Robot Weight (with battery & bumpers)</label>
+      <input class="form-input" type="text">
+
+      <label class="form-label">Swerve Drive Type</label>
       <select class="form-input">
-        <option value="">Select drivebase type...</option>
-        <option value="swerve">Swerve</option>
-        <option value="tank">Tank</option>
-        <option value="west_coast">West Coast</option>
-        <option value="mecanum">Mecanum</option>
-        <option value="other">Other</option>
+        <option value="">Select Swerve Type</option>
+        <option value="swerve">SDS MK4</option>
+        <option value="swerve">SDS MK4i</option>
+        <option value="swerve">SDS MK4c</option>
+        <option value="swerve">SDS MK4n</option>
+        <option value="swerve">SDS MK5i</option>
+        <option value="swerve">SDS MK5n</option>
+        <option value="swerve">REV Swerve</option>
+        <option value="swerve">NOT USING SWERVE</option>
       </select>
 
-      <label class="form-label">Robot Weight (lbs)</label>
-      <input class="form-input" type="number">
+      <label class="form-label">Motor Type (Put other in notes)</label>
+<div class="form-checkbox-row">
+  <input type="radio" name="motors" value="kraken">
+  <span>Kraken</span>
+</div>
+<div class="form-checkbox-row">
+  <input type="radio" name="motors" value="falcon">
+  <span>Falcon 500</span>
+</div>
+<div class="form-checkbox-row">
+  <input type="radio" name="motors" value="neo">
+  <span>NEO</span>
+</div>
+<div class="form-checkbox-row">
+  <input type="radio" name="motors" value="neo_vortex">
+  <span>NEO Vortex</span>
+</div>
+<div class="form-checkbox-row">
+  <input type="radio" name="motors" value="cim">
+  <span>CIM</span>
+</div>
+<div class="form-checkbox-row">
+  <input type="radio" name="motors" value="other">
+  <span>Other</span>
+</div>
 
       <label class="form-label">Has Autonomous?</label>
       <div class="form-checkbox-row">
@@ -223,5 +265,6 @@
 
 </body>
 </html>
+
 
 
