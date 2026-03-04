@@ -1,0 +1,14 @@
+[
+  { "key": "2026mabil", "name": "NE District Minuteman Event", "city": "Billerica", "state_prov": "CT" },
+  { "key": "2026mefal", "name": "NE District Pine Tree Event", "city": "Falmouth", "state_prov": "ME" },
+  { "key": "2026marea", "name": "NE District North Shore Event", "city": "Reading", "state_prov": "MA" },
+  { "key": "2026mawne", "name": "NE District Western NE Event", "city": "Springfield", "state_prov": "MA" },
+  { "key": "2026nhbed", "name": "NE District Granite State Event", "city": "Bedford", "state_prov": "NH" },
+  { "key": "2026rikin", "name": "NE District URI Event", "city": "Kingston", "state_prov": "RI" },
+  { "key": "2026ctwat", "name": "NE District Waterbury Event", "city": "Waterbury", "state_prov": "CT" },
+  { "key": "2026cthar", "name": "NE District Hartford Event", "city": "Hartford", "state_prov": "CT" },
+  { "key": "2026mabos", "name": "NE District Greater Boston Event", "city": "Revere", "state_prov": "MA" },
+  { "key": "2026nhdur", "name": "NE District UNH Event", "city": "Durham", "state_prov": "NH" },
+  { "key": "2026vtbur", "name": "NE District UVM Event", "city": "Burlington", "state_prov": "VT" },
+  { "key": "2026mawor", "name": "NE District WPI Event", "city": "Worcester", "state_prov": "MA" }
+]

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>1991 Pit Scouting</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<label for="event">Event:</label>
+<select id="event">
+  <option value="">Select an event</option>
+  <option value="2026mabil">2026 Minuteman</option>
+  <option value="2026mawne">2026 Western NE</option>
+  <option value="2026ctwat">2026 Waterbury</option>
+  <option value="2026rikin">2026 URI</option>
+  <option value="2026cthar">2026 Hartford</option>
+</select>
+
+<script>
+const teams = {
+  "2026mabil": [
+    { number: 157, name: "AZTECHS" },
+    { number: 175, name: "Buzz Robotics" },
+    { number: 663, name: "Power Sharks" },
+    { number: 1071, name: "Team MAX" },
+    { number: 1099, name: "DiscoTechs" },
+    { number: 1119, name: "Pup Cups" },
+
+
+  "2026mawne": [
+    { number: 1027, name: "Mechatronic Maniacs" },
+    { number: 10592, name: "Stamford Cyber-Hird TSA" }
+    // ...rest of WNE teams
+  ],
+
+  "2026ctwat": [
+    { number: 10133, name: "Manhattan Monsters" },
+    { number: 10245, name: "WAMS" }
+    // ...rest of Waterbury teams
+  ],
+
+  "2026rikin": [
+    { number: 10063, name: "S.C.R.A.P." },
+    { number: 10066, name: "CephaloSquad" }
+    // ...rest of URI teams
+  ],
+
+  "2026cthar": [
+    { number: 10133, name: "Manhattan Monsters" },
+    { number: 10245, name: "WAMS" }
+    // ...rest of Hartford teams
+  ],
+
+  "2026necmp": [
+    // DCMP teams go here
+  ]
+};
+
+document.getElementById("event").addEventListener("change", function () {
+  const eventKey = this.value;
+  const teamSelect = document.getElementById("team");
+
+  teamSelect.innerHTML = '<option value="">Select a team</option>';
+
+  if (teams[eventKey]) {
+    teams[eventKey].forEach(team => {
+      const opt = document.createElement("option");
+      opt.value = team.number;
+      opt.textContent = `${team.number} | ${team.name}`;
+      teamSelect.appendChild(opt);
+    });
+  }
+});
+</script>
+
+<body class="dark-body">
+
+  <div class="dark-card">
+    <h1 class="form-title">Pit Scouting</h1>
+
+    <form>
+
+      <label class="form-label">Robot Height (inches)</label>
+      <input class="form-input" type="number">
+
+      <label class="form-label">Robot Width (inches)</label>
+      <input class="form-input" type="number">
+
+      <label class="form-label">Robot Length (inches)</label>
+      <input class="form-input" type="number">
+
+      <label class="form-label">Robot Drivebase Type</label>
+      <select class="form-input">
+        <option value="">Select drivebase type...</option>
+        <option value="swerve">Swerve</option>
+        <option value="tank">Tank</option>
+        <option value="west_coast">West Coast</option>
+        <option value="mecanum">Mecanum</option>
+        <option value="other">Other</option>
+</select>
+
+      <label class="form-label">Robot Weight (lbs)</label>
+      <input class="form-input" type="number">
+
+      <label class="form-label">Drivetrain Type</label>
+      <input class="form-input" type="text" placeholder="Swerve, Tank, West Coast...">
+
+      <label class="form-label">Has Autonomous?</label>
+      <div class="form-checkbox-row">
+        <input type="checkbox">
+        <span>Yes</span>
+      </div>
+
+      <label class="form-label">Can Climb?</label>
+      <div class="form-checkbox-row">
+        <input type="checkbox">
+        <span>Yes</span>
+      </div>
+
+      <label class="form-label">Notes</label>
+      <textarea class="form-textarea"></textarea>
+
+      <button class="form-submit" type="submit">Submit</button>
+
+    </form>
+  </div>
+
+</body>
+</html>
