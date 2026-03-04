@@ -15,62 +15,7 @@
   <option value="2026cthar">2026 Hartford</option>
 </select>
 
-<script>
-const teams = {
-  "2026mabil": [
-    { number: 157, name: "AZTECHS" },
-    { number: 175, name: "Buzz Robotics" },
-    { number: 663, name: "Power Sharks" },
-    { number: 1071, name: "Team MAX" },
-    { number: 1099, name: "DiscoTechs" },
-    { number: 1119, name: "Pup Cups" },
-
-
-  "2026mawne": [
-    { number: 1027, name: "Mechatronic Maniacs" },
-    { number: 10592, name: "Stamford Cyber-Hird TSA" }
-    // ...rest of WNE teams
-  ],
-
-  "2026ctwat": [
-    { number: 10133, name: "Manhattan Monsters" },
-    { number: 10245, name: "WAMS" }
-    // ...rest of Waterbury teams
-  ],
-
-  "2026rikin": [
-    { number: 10063, name: "S.C.R.A.P." },
-    { number: 10066, name: "CephaloSquad" }
-    // ...rest of URI teams
-  ],
-
-  "2026cthar": [
-    { number: 10133, name: "Manhattan Monsters" },
-    { number: 10245, name: "WAMS" }
-    // ...rest of Hartford teams
-  ],
-
-  "2026necmp": [
-    // DCMP teams go here
-  ]
-};
-
-document.getElementById("event").addEventListener("change", function () {
-  const eventKey = this.value;
-  const teamSelect = document.getElementById("team");
-
-  teamSelect.innerHTML = '<option value="">Select a team</option>';
-
-  if (teams[eventKey]) {
-    teams[eventKey].forEach(team => {
-      const opt = document.createElement("option");
-      opt.value = team.number;
-      opt.textContent = `${team.number} | ${team.name}`;
-      teamSelect.appendChild(opt);
-    });
-  }
-});
-</script>
+  
 
 <body class="dark-body">
 
@@ -126,3 +71,4 @@ document.getElementById("event").addEventListener("change", function () {
 
 </body>
 </html>
+
