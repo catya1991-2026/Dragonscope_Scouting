@@ -163,7 +163,7 @@
 
       <hr class="section-divider">
 
-      <label class="form-label">Event</label>
+       <label class="form-label">Event</label>
       <select class="form-input" id="event">
         <option value="">Select an event...</option>
         <option value="2026mabil">2026 Minuteman</option>
@@ -177,7 +177,7 @@
       <select class="form-input" id="team" disabled>
         <option value="">Select an event first...</option>
       </select>
-
+      
       <label class="form-label">Is Their Robot Present?</label>
 <div class="form-checkbox-row">
   <input type="checkbox" id="robot_present">
@@ -247,10 +247,51 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting...';
 
-        </script>
+      const driveMotors = [...document.querySelectorAll('input[name="drive_motor"]:checked')].map(el => el.value);
+      const steerMotors = [...document.querySelectorAll('input[name="steer_motor"]:checked')].map(el => el.value);
+
+      const data = {
+        timestamp: new Date().toISOString(),
+        event: document.getElementById('event').value,
+        team: document.getElementById('team').value,
+        scouter_name: document.getElementById('scouter_name').value,
+        scouter_team: document.getElementById('scouter_team').value,
+        drive_train: document.getElementById('drive_train').value,
+        swerve_type: document.getElementById('swerve_type').value,
+        drive_motors: driveMotors,
+        steer_motors: steerMotors,
+        robot_width: document.getElementById('robot_width').value,
+        robot_length: document.getElementById('robot_length').value,
+        robot_weight: document.getElementById('robot_weight').value,
+        auto_count: document.getElementById('auto_count').value,
+        auto_description: document.getElementById('auto_description').value,
+        auto_start: document.getElementById('auto_start').value,
+        auto_climb: document.getElementById('auto_climb').value,
+        fuel_capacity: document.getElementById('fuel_capacity').value,
+        bump: document.getElementById('bump').value,
+        trench: document.getElementById('trench').value,
+        avg_fuel: document.getElementById('avg_fuel').value,
+        automation: document.getElementById('automation').value,
+        automation_description: document.getElementById('automation_description').value,
+        notes: document.getElementById('notes').value,
+      };
+
+      try {
+        await addDoc(collection(db, "pit_scouting"), data);
+        const toast = document.getElementById('toast');
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        document.getElementById('pitForm').reset();
+        document.getElementById('team').innerHTML = '<option value="">Select an event first...</option>';
+        document.getElementById('team').disabled = true;
+      } catch (err) {
+        alert('Error saving submission: ' + err.message);
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+    });
+  </script>
 
 </body>
 </html>
-
-
-
