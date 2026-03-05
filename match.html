@@ -198,4 +198,59 @@
       
       <hr class="section-divider">
 
+ <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3wq_x0FMP5q9FnKa_ppTCiVI_OijTDEU",
+      authDomain: "dragon-bdc86.firebaseapp.com",
+      projectId: "dragon-bdc86",
+      storageBucket: "dragon-bdc86.firebasestorage.app",
+      messagingSenderId: "516398791570",
+      appId: "1:516398791570:web:11063eaac685b9ad29df4b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Team dropdown
+    let teamsData = {};
+    fetch('teams.json')
+      .then(res => res.json())
+      .then(data => { teamsData = data; })
+      .catch(err => console.error('Could not load teams.json:', err));
+
+    document.getElementById('event').addEventListener('change', function () {
+      const eventKey = this.value;
+      const teamSelect = document.getElementById('team');
+      teamSelect.innerHTML = '<option value="">Select a team...</option>';
+      if (eventKey && teamsData[eventKey]) {
+        teamsData[eventKey].forEach(team => {
+          const option = document.createElement('option');
+          option.value = team.number;
+          option.textContent = `${team.number} – ${team.name}`;
+          teamSelect.appendChild(option);
+        });
+        teamSelect.disabled = false;
+      } else {
+        teamSelect.innerHTML = '<option value="">Select an event first...</option>';
+        teamSelect.disabled = true;
+      }
+    });
+
+    // Submit form to Firebase
+    document.getElementById('pitForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+        </script>
+
+</body>
+</html>
+
+
 
