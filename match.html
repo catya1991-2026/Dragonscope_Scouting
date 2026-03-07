@@ -214,7 +214,17 @@
       </select>
 
       <label class="form-label">Fuel scored during autonomous</label>
-      <input type="range" min="0" max="40" step="5">
+      <input type="range" min="0" max="50" step="10" list="tickmarks"
+         style="width: 100%;">
+      <datalist id="tickmarks">
+      <option value="0" label="0"></option>
+      <option value="10" label="10"></option>
+      <option value="20" label="20"></option>
+      <option value="30" label="30"></option>
+      <option value="40" label="40"></option>
+      <option value="50" label="50"></option>
+      </datalist>
+      </div>
       
  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -313,4 +323,5 @@
 
 </body>
 </html>
+
 
