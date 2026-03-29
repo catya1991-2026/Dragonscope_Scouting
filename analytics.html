@@ -738,10 +738,11 @@
             ${m.pass_fuel          === 'yes' ? '<div class="match-stat-chip">Pass Fuel: <span>Yes</span></div>'      : ''}
             ${m.lining_up          === 'yes' ? '<div class="match-stat-chip">Lining Up: <span>Yes</span></div>'      : ''}
             ${m.endgame_shooting   === 'yes' ? '<div class="match-stat-chip">Endgame Shoot: <span>Yes</span></div>'  : ''}
-            ${m.scouter ? `<div class="match-stat-chip">Scouter: <span>${m.scouter}</span></div>` : ''}
+            ${m.scouter_name ? `<div class="match-stat-chip">Scouter: <span>${m.scouter_name}</span></div>` : ''}
+            ${m.issues && m.issues.trim() ? `<div class="match-stat-chip">Issues: <span>${m.issues}</span></div>` : ''}
           </div>
-          ${m.notes && m.notes.trim()
-            ? `<div class="match-notes-text">💬 ${m.notes}</div>`
+          ${m.match_notes && m.match_notes.trim()
+            ? `<div class="match-notes-text">💬 ${m.match_notes}</div>`
             : `<div class="match-notes-none">No notes for this match.</div>`
           }
         </div>`;
