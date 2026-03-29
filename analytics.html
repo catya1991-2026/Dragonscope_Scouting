@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html>
 <head>
@@ -137,10 +138,6 @@
     .tab.active { background: #ff8601; color: black; }
     .combined-score { font-size: 20px; font-weight: bold; color: #ff8601; }
 
-    /* Win probability */
-    .win-bar-wrap { background: #2a2a2a; border-radius: 8px; overflow: hidden; height: 14px; width: 100%; }
-    .win-bar { height: 14px; border-radius: 8px; transition: width 0.4s; }
-
     /* Alliance picker */
     .alliance-selects {
       display: grid;
@@ -150,9 +147,6 @@
     }
     .alliance-selects select { font-size: 13px; }
     .alliance-result { background: #222; border-radius: 12px; padding: 16px; margin-top: 8px; }
-    .alliance-result h3 { color: #ff8601; margin: 0 0 12px 0; font-size: 16px; }
-    .win-prob-display { font-size: 48px; font-weight: bold; text-align: center; padding: 16px 0 8px 0; }
-    .win-prob-label { text-align: center; color: #888; font-size: 13px; margin-bottom: 16px; }
     .alliance-team-row {
       display: flex;
       justify-content: space-between;
@@ -175,6 +169,111 @@
     .suggestion-teams { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
     .suggestion-prob { font-size: 28px; font-weight: bold; }
     .suggestion-stats { font-size: 12px; color: #aaa; margin-top: 6px; }
+
+    /* Team detail / individual match view */
+    .team-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .team-detail-number {
+      font-size: 28px;
+      font-weight: bold;
+      color: #ff8601;
+    }
+    .team-detail-back {
+      background: #2a2a2a;
+      color: #ff8601;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .team-detail-back:hover { background: #333; }
+    .match-card {
+      background: #1e1e1e;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .match-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .match-card-title {
+      font-weight: bold;
+      font-size: 15px;
+      color: #ff8601;
+    }
+    .match-card-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .match-stat-chip {
+      background: #2a2a2a;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: #aaa;
+    }
+    .match-stat-chip span { color: white; font-weight: bold; }
+    .match-notes-text {
+      font-size: 13px;
+      color: #ddd;
+      background: #141414;
+      border-left: 3px solid #ff8601;
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    .match-notes-none {
+      font-size: 12px;
+      color: #444;
+      font-style: italic;
+      margin-top: 6px;
+    }
+
+    /* Clickable team name in table */
+    .team-link {
+      color: #ff8601;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: bold;
+    }
+    .team-link:hover { color: white; }
+
+    /* Pit notes styling */
+    .pit-notes-block {
+      margin-top: 10px;
+      background: #141414;
+      border-left: 3px solid #ff8601;
+      border-radius: 0 8px 8px 0;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #ddd;
+      line-height: 1.5;
+    }
+    .pit-notes-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #ff8601;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
 
     footer { text-align: center; color: #555; font-size: 13px; padding: 16px; }
   </style>
@@ -215,7 +314,6 @@
     <div class="tab" onclick="showTab('match')">Match Stats</div>
     <div class="tab" onclick="showTab('pit')">Pit Data</div>
     <div class="tab" onclick="showTab('combined')">Combined</div>
-    <div class="tab" onclick="showTab('winprob')">Win Prob</div>
     <div class="tab" onclick="showTab('alliance')">Alliance</div>
     <div class="tab" onclick="showTab('charts')">Charts</div>
   </div>
@@ -230,8 +328,23 @@
 
   <!-- MATCH TAB -->
   <div id="tab-match" style="display:none">
-    <div class="dark-card">
-      <div class="card-title">Match Scouting — Sort By</div>
+
+    <!-- Individual team detail view -->
+    <div class="dark-card" id="teamDetailCard" style="display:none">
+      <div class="team-detail-header">
+        <button class="team-detail-back" onclick="closeTeamDetail()">← Back to All Teams</button>
+        <div class="team-detail-number" id="teamDetailTitle"></div>
+        <div id="teamDetailSummary" style="color:#888; font-size:13px;"></div>
+      </div>
+      <div id="teamDetailContent"></div>
+    </div>
+
+    <!-- Normal match stats table -->
+    <div class="dark-card" id="matchTableCard">
+      <div class="card-title">
+        Match Scouting — Sort By
+        <span style="font-size:12px; color:#888; font-weight:normal; margin-left:8px;">Click a team number to see their individual matches &amp; notes</span>
+      </div>
       <select id="matchSortSelect" onchange="renderMatchTable()" style="margin-bottom:16px">
         <option value="avg_teleop_fuel">Avg Teleop Fuel</option>
         <option value="avg_auto_fuel">Avg Auto Fuel</option>
@@ -243,7 +356,6 @@
         <option value="pass_fuel_rate">Pass Fuel Rate (%)</option>
         <option value="lining_up_rate">Lining Up Rate (%)</option>
         <option value="endgame_shooting_rate">Endgame Shooting Rate (%)</option>
-        <option value="win_prob">Win Probability (%)</option>
         <option value="matches">Matches Scouted</option>
       </select>
       <div id="matchTable"><div class="status-msg">Load data first</div></div>
@@ -281,30 +393,16 @@
         <option value="climb_rate">Climb Rate (%)</option>
         <option value="avg_shooting">Avg Shooting Accuracy</option>
         <option value="avg_defense">Avg Defense Rating</option>
-        <option value="win_prob">Win Probability (%)</option>
       </select>
       <div id="combinedTable"><div class="status-msg">Load data first</div></div>
-    </div>
-  </div>
-
-  <!-- WIN PROBABILITY TAB -->
-  <div id="tab-winprob" style="display:none">
-    <div class="dark-card">
-      <div class="card-title">Win Probability Rankings</div>
-      <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Calculated from weighted performance stats: fuel scored, shooting accuracy, climb rate, auto performance, defense, and penalties.</p>
-      <div id="winProbTable"><div class="status-msg">Load data first</div></div>
-    </div>
-    <div class="dark-card">
-      <div class="card-title">Win Probability Distribution</div>
-      <div class="chart-wrap"><canvas id="winProbChart"></canvas></div>
     </div>
   </div>
 
   <!-- ALLIANCE PICKER TAB -->
   <div id="tab-alliance" style="display:none">
     <div class="dark-card">
-      <div class="card-title">Alliance Win Probability Calculator</div>
-      <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Select up to 3 teams to see your projected alliance win probability.</p>
+      <div class="card-title">Alliance Calculator</div>
+      <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Select up to 3 teams to compare their combined stats.</p>
       <div class="alliance-selects">
         <div>
           <div style="color:#ff8601; font-weight:bold; font-size:13px; margin-bottom:6px;">Team 1 (You)</div>
@@ -325,12 +423,12 @@
           </select>
         </div>
       </div>
-      <div id="allianceResult"><div class="status-msg">Select teams above to calculate</div></div>
+      <div id="allianceResult"><div class="status-msg">Select teams above to compare</div></div>
     </div>
 
     <div class="dark-card">
       <div class="card-title">Best Alliance Suggestions for Team 1991</div>
-      <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Top 3 partner combinations that give Team 1991 the highest projected win probability.</p>
+      <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Top 3 partner combinations by combined score.</p>
       <div id="allianceSuggestions"><div class="status-msg">Load data first</div></div>
     </div>
   </div>
@@ -350,7 +448,6 @@
         <option value="pass_fuel_rate">Pass Fuel Rate (%)</option>
         <option value="lining_up_rate">Lining Up Rate (%)</option>
         <option value="endgame_shooting_rate">Endgame Shooting Rate (%)</option>
-        <option value="win_prob">Win Probability (%)</option>
         <option value="combined_score">Combined Score</option>
         <option value="matches">Matches Scouted</option>
       </select>
@@ -422,13 +519,13 @@
     window._pitDocs = [];
     window._teamStats = {};
     window._pitByTeam = {};
+    window._matchesByTeam = {};
     window._chartInstance = null;
     window._climbPie = null;
     window._autoClimbPie = null;
     window._driveChart = null;
     window._intakeChart = null;
     window._automationChart = null;
-    window._winProbChart = null;
 
     window.loadData = async function () {
       const eventKey = document.getElementById('eventSelect').value;
@@ -455,6 +552,15 @@
 
         window._matchDocs = matchDocs;
         window._pitDocs = pitDocs;
+
+        // Group raw match docs by team for individual match view
+        const matchesByTeam = {};
+        matchDocs.forEach(d => {
+          if (!d.team) return;
+          if (!matchesByTeam[d.team]) matchesByTeam[d.team] = [];
+          matchesByTeam[d.team].push(d);
+        });
+        window._matchesByTeam = matchesByTeam;
 
         const pitByTeam = {};
         pitDocs.forEach(d => { if (d.team) pitByTeam[d.team] = d; });
@@ -517,29 +623,21 @@
             fuelCapBonus -
             (s.foul_rate * 0.05)
           ).toFixed(1);
-
-          // Win probability: normalize combined_score to 0-100%
-          // Will be normalized after all teams computed
-          s._raw_win = s.combined_score;
-        });
-
-        // Normalize win probability across all teams
-        const allScores = Object.values(stats).map(s => s._raw_win);
-        const minScore = Math.min(...allScores);
-        const maxScore = Math.max(...allScores);
-        const scoreRange = maxScore - minScore || 1;
-        Object.values(stats).forEach(s => {
-          s.win_prob = maxScore === minScore ? 50 : +((((s._raw_win - minScore) / scoreRange) * 70) + 15).toFixed(1);
         });
 
         window._teamStats = stats;
+
+        // If a specific team was selected, jump straight to their detail view
+        if (teamFilter && stats[teamFilter]) {
+          showTab('match');
+          openTeamDetail(teamFilter);
+        }
 
         populateAllianceDropdowns();
         renderOverview();
         renderMatchTable();
         renderPitCards();
         renderCombinedTable();
-        renderWinProbTable();
         renderAllianceSuggestions();
         renderCharts();
 
@@ -566,492 +664,73 @@
       return '—';
     }
 
-    // Win probability for an alliance of 1-3 teams
-    function allianceWinProb(teamNums) {
-      const stats = window._teamStats;
-      const members = teamNums.filter(t => t && stats[t]);
-      if (!members.length) return 0;
-      // Alliance score = sum of member win probs, weighted and capped
-      const total = members.reduce((sum, t) => sum + (stats[t].win_prob || 0), 0);
-      const avg = total / members.length;
-      // Bonus for having 3 strong teams
-      const bonus = members.length === 3 ? Math.min((total / 300) * 10, 10) : 0;
-      return Math.min(+(avg + bonus).toFixed(1), 97);
-    }
+    // ── TEAM DETAIL VIEW ──────────────────────────────────────────────────────
 
-    function populateAllianceDropdowns() {
-      const teams = Object.values(window._teamStats).sort((a, b) => b.win_prob - a.win_prob);
-      ['alliancePick1', 'alliancePick2', 'alliancePick3'].forEach(id => {
-        const sel = document.getElementById(id);
-        sel.innerHTML = '<option value="">Select team...</option>';
-        teams.forEach(t => {
-          const o = document.createElement('option');
-          o.value = t.team;
-          o.textContent = `${t.team} (${t.win_prob}%)`;
-          sel.appendChild(o);
+    window.openTeamDetail = function (teamNum) {
+      const matches = window._matchesByTeam[teamNum] || [];
+      const stats = window._teamStats[teamNum] || {};
+      const pit = window._pitByTeam[teamNum] || {};
+
+      document.getElementById('teamDetailTitle').textContent = `Team ${teamNum}`;
+      document.getElementById('teamDetailSummary').textContent =
+        `${matches.length} match${matches.length !== 1 ? 'es' : ''} scouted · Avg Teleop: ${stats.avg_teleop_fuel || 0} · Avg Auto: ${stats.avg_auto_fuel || 0} · Climb: ${stats.climb_rate || 0}%`;
+
+      let html = '';
+
+      // Pit notes at the top if they exist
+      if (pit.notes && pit.notes.trim()) {
+        html += `<div style="margin-bottom:16px">
+          <div class="pit-notes-label">🔧 Pit Scouting Notes</div>
+          <div class="pit-notes-block">${pit.notes}</div>
+        </div>`;
+      }
+      if (pit.automation_description && pit.automation_description.trim()) {
+        html += `<div style="margin-bottom:16px">
+          <div class="pit-notes-label">⚙️ Automation Details</div>
+          <div class="pit-notes-block">${pit.automation_description}</div>
+        </div>`;
+      }
+
+      // Divider
+      if (matches.length) {
+        html += `<div style="color:#ff8601; font-weight:bold; font-size:14px; margin-bottom:12px;">📋 Individual Matches</div>`;
+      }
+
+      if (!matches.length) {
+        html += '<div class="status-msg">No match data for this team.</div>';
+      } else {
+        matches.forEach((m, i) => {
+          const matchLabel = m.match_number ? `Match ${m.match_number}` : `Entry ${i + 1}`;
+
+          const climbLevel = m.climb_level || null;
+          const climbBadgeClass = climbLevel === 'L3' ? 'badge-green' : climbLevel === 'L2' ? 'badge-blue' : climbLevel === 'L1' ? 'badge-orange' : 'badge-red';
+          const climbBadge = climbLevel ? `<span class="badge ${climbBadgeClass}">${climbLevel}</span>` : '';
+
+          html += `<div class="match-card">
+            <div class="match-card-header">
+              <div class="match-card-title">${matchLabel}</div>
+              <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                ${m.fouls === 'yes' ? '<span class="badge badge-red">Foul</span>' : ''}
+                ${m.auto_climb === 'yes' ? '<span class="badge badge-green">Auto Climb</span>' : ''}
+                ${climbBadge}
+              </div>
+            </div>
+            <div class="match-card-stats">
+              <div class="match-stat-chip">Teleop Fuel: <span>${m.teleop_fuel || '—'}</span></div>
+              <div class="match-stat-chip">Auto Fuel: <span>${m.auto_fuel || '—'}</span></div>
+              <div class="match-stat-chip">Shooting: <span>${m.shooting_accuracy ? m.shooting_accuracy + '/5' : '—'}</span></div>
+              <div class="match-stat-chip">Defense: <span>${m.defense_rating ? m.defense_rating + '/5' : '—'}</span></div>
+              ${m.pass_fuel === 'yes' ? '<div class="match-stat-chip">Pass Fuel: <span>Yes</span></div>' : ''}
+              ${m.lining_up === 'yes' ? '<div class="match-stat-chip">Lining Up: <span>Yes</span></div>' : ''}
+              ${m.endgame_shooting === 'yes' ? '<div class="match-stat-chip">Endgame Shoot: <span>Yes</span></div>' : ''}
+              ${m.scouter ? `<div class="match-stat-chip">Scouter: <span>${m.scouter}</span></div>` : ''}
+            </div>
+            ${m.notes && m.notes.trim()
+              ? `<div class="match-notes-text">💬 ${m.notes}</div>`
+              : `<div class="match-notes-none">No notes for this match.</div>`
+            }
+          </div>`;
         });
-      });
-      // Pre-select 1991 in Team 1 slot if present
-      const sel1 = document.getElementById('alliancePick1');
-      for (const opt of sel1.options) {
-        if (String(opt.value) === '1991') { sel1.value = '1991'; break; }
-      }
-      calcAlliance();
-    }
-
-    window.calcAlliance = function () {
-      const t1 = document.getElementById('alliancePick1').value;
-      const t2 = document.getElementById('alliancePick2').value;
-      const t3 = document.getElementById('alliancePick3').value;
-      const selected = [t1, t2, t3].filter(Boolean);
-      if (!selected.length) {
-        document.getElementById('allianceResult').innerHTML = '<div class="status-msg">Select at least one team</div>';
-        return;
-      }
-      const prob = allianceWinProb(selected);
-      const color = prob >= 65 ? '#4caf50' : prob >= 45 ? '#ff8601' : '#f44336';
-      const stats = window._teamStats;
-
-      let rows = selected.map(t => {
-        const s = stats[t] || {};
-        return `<div class="alliance-team-row">
-          <span><strong>Team ${t}</strong></span>
-          <span style="color:#888; font-size:13px">${s.avg_teleop_fuel || 0} teleop · ${s.avg_auto_fuel || 0} auto · ${s.avg_shooting || 0}/5 shooting · ${s.climb_rate || 0}% climb</span>
-          <span class="badge ${s.win_prob >= 60 ? 'badge-green' : s.win_prob >= 40 ? 'badge-orange' : 'badge-red'}">${s.win_prob || 0}%</span>
-        </div>`;
-      }).join('');
-
-      // Strengths & weaknesses
-      const allTeleop = selected.map(t => stats[t]?.avg_teleop_fuel || 0);
-      const allAuto = selected.map(t => stats[t]?.avg_auto_fuel || 0);
-      const allClimb = selected.map(t => stats[t]?.climb_rate || 0);
-      const allFouls = selected.map(t => stats[t]?.foul_rate || 0);
-      const totalTeleop = allTeleop.reduce((a, b) => a + b, 0);
-      const totalAuto = allAuto.reduce((a, b) => a + b, 0);
-      const avgClimb = allClimb.reduce((a, b) => a + b, 0) / allClimb.length;
-      const avgFouls = allFouls.reduce((a, b) => a + b, 0) / allFouls.length;
-
-      const strengths = [];
-      const warnings = [];
-      if (totalTeleop > 40) strengths.push('High combined fuel output');
-      if (totalAuto > 20) strengths.push('Strong autonomous');
-      if (avgClimb >= 60) strengths.push('Reliable climbers');
-      if (avgFouls < 20) strengths.push('Low penalty risk');
-      if (totalTeleop < 15) warnings.push('Low combined fuel output');
-      if (avgClimb < 30) warnings.push('Weak climb reliability');
-      if (avgFouls > 50) warnings.push('High foul/penalty risk');
-
-      document.getElementById('allianceResult').innerHTML = `
-        <div class="alliance-result">
-          <div class="win-prob-display" style="color:${color}">${prob}%</div>
-          <div class="win-prob-label">Projected Alliance Win Probability</div>
-          <div style="margin-bottom:16px">
-            <div class="win-bar-wrap"><div class="win-bar" style="width:${prob}%; background:${color}"></div></div>
-          </div>
-          ${rows}
-          ${strengths.length ? `<div style="margin-top:14px; font-size:13px; color:#4caf50;">✅ ${strengths.join(' · ')}</div>` : ''}
-          ${warnings.length ? `<div style="margin-top:6px; font-size:13px; color:#f44336;">⚠️ ${warnings.join(' · ')}</div>` : ''}
-        </div>`;
-    };
-
-    window.renderAllianceSuggestions = function () {
-      const stats = window._teamStats;
-      const allTeams = Object.keys(stats);
-      const team1991 = allTeams.find(t => String(t) === '1991');
-
-      if (!team1991) {
-        document.getElementById('allianceSuggestions').innerHTML =
-          '<div class="status-msg">Team 1991 not found in this dataset. Select any team in the calculator above.</div>';
-        return;
       }
 
-      // Try all pairs of partners for 1991
-      const others = allTeams.filter(t => String(t) !== '1991');
-      const combos = [];
-      for (let i = 0; i < others.length; i++) {
-        for (let j = i + 1; j < others.length; j++) {
-          const prob = allianceWinProb(['1991', others[i], others[j]]);
-          combos.push({ partners: [others[i], others[j]], prob });
-        }
-      }
-      combos.sort((a, b) => b.prob - a.prob);
-      const top3 = combos.slice(0, 3);
-
-      if (!top3.length) {
-        document.getElementById('allianceSuggestions').innerHTML =
-          '<div class="status-msg">Not enough teams with data to generate suggestions.</div>';
-        return;
-      }
-
-      const rankLabels = ['🥇 Best Pick', '🥈 Second Best', '🥉 Third Best'];
-      const rankClasses = ['rank-1', 'rank-2', 'rank-3'];
-
-      let html = '';
-      top3.forEach((combo, idx) => {
-        const [p1, p2] = combo.partners;
-        const s1 = stats[p1] || {};
-        const s2 = stats[p2] || {};
-        const color = combo.prob >= 65 ? '#4caf50' : combo.prob >= 45 ? '#ff8601' : '#2196f3';
-        html += `<div class="suggestion-card ${rankClasses[idx]}">
-          <div class="suggestion-rank">${rankLabels[idx]}</div>
-          <div class="suggestion-teams">1991 + ${p1} + ${p2}</div>
-          <div class="suggestion-prob" style="color:${color}">${combo.prob}% win probability</div>
-          <div class="suggestion-stats">
-            Team ${p1}: ${s1.avg_teleop_fuel || 0} teleop · ${s1.avg_shooting || 0}/5 shooting · ${s1.climb_rate || 0}% climb<br>
-            Team ${p2}: ${s2.avg_teleop_fuel || 0} teleop · ${s2.avg_shooting || 0}/5 shooting · ${s2.climb_rate || 0}% climb
-          </div>
-        </div>`;
-      });
-      document.getElementById('allianceSuggestions').innerHTML = html;
-    };
-
-    window.renderWinProbTable = function () {
-      const stats = Object.values(window._teamStats);
-      if (!stats.length) {
-        document.getElementById('winProbTable').innerHTML = '<div class="status-msg">No data loaded.</div>';
-        return;
-      }
-      stats.sort((a, b) => b.win_prob - a.win_prob);
-
-      let html = `<table><tr>
-        <th>Rank</th>
-        <th onclick="sortWinProb('team')">Team</th>
-        <th onclick="sortWinProb('win_prob')">Win Probability</th>
-        <th onclick="sortWinProb('avg_teleop_fuel')">Teleop Fuel</th>
-        <th onclick="sortWinProb('avg_auto_fuel')">Auto Fuel</th>
-        <th onclick="sortWinProb('avg_shooting')">Shooting</th>
-        <th onclick="sortWinProb('climb_rate')">Climb %</th>
-        <th onclick="sortWinProb('foul_rate')">Foul %</th>
-      </tr>`;
-      stats.forEach((s, i) => {
-        const color = s.win_prob >= 65 ? '#4caf50' : s.win_prob >= 45 ? '#ff8601' : '#f44336';
-        html += `<tr>
-          <td style="color:#888">#${i + 1}</td>
-          <td><strong>${s.team}</strong>${String(s.team) === '1991' ? ' <span style="color:#ff8601; font-size:11px">★ US</span>' : ''}</td>
-          <td>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div class="win-bar-wrap" style="width:80px">
-                <div class="win-bar" style="width:${s.win_prob}%; background:${color}"></div>
-              </div>
-              <span style="color:${color}; font-weight:bold">${s.win_prob}%</span>
-            </div>
-          </td>
-          <td>${s.avg_teleop_fuel}</td>
-          <td>${s.avg_auto_fuel}</td>
-          <td>${s.avg_shooting}/5</td>
-          <td><span class="badge ${s.climb_rate >= 60 ? 'badge-green' : s.climb_rate >= 30 ? 'badge-orange' : 'badge-red'}">${s.climb_rate}%</span></td>
-          <td><span class="badge ${s.foul_rate >= 50 ? 'badge-red' : 'badge-orange'}">${s.foul_rate}%</span></td>
-        </tr>`;
-      });
-      html += '</table>';
-      document.getElementById('winProbTable').innerHTML = html;
-    };
-
-    window.sortWinProb = function (key) {
-      const stats = Object.values(window._teamStats);
-      stats.sort((a, b) => key === 'team' ? String(a.team).localeCompare(String(b.team)) : (b[key] || 0) - (a[key] || 0));
-      let html = `<table><tr>
-        <th>Rank</th>
-        <th onclick="sortWinProb('team')">Team</th>
-        <th onclick="sortWinProb('win_prob')">Win Probability</th>
-        <th onclick="sortWinProb('avg_teleop_fuel')">Teleop Fuel</th>
-        <th onclick="sortWinProb('avg_auto_fuel')">Auto Fuel</th>
-        <th onclick="sortWinProb('avg_shooting')">Shooting</th>
-        <th onclick="sortWinProb('climb_rate')">Climb %</th>
-        <th onclick="sortWinProb('foul_rate')">Foul %</th>
-      </tr>`;
-      stats.forEach((s, i) => {
-        const color = s.win_prob >= 65 ? '#4caf50' : s.win_prob >= 45 ? '#ff8601' : '#f44336';
-        html += `<tr>
-          <td style="color:#888">#${i + 1}</td>
-          <td><strong>${s.team}</strong>${String(s.team) === '1991' ? ' <span style="color:#ff8601; font-size:11px">★ US</span>' : ''}</td>
-          <td>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div class="win-bar-wrap" style="width:80px">
-                <div class="win-bar" style="width:${s.win_prob}%; background:${color}"></div>
-              </div>
-              <span style="color:${color}; font-weight:bold">${s.win_prob}%</span>
-            </div>
-          </td>
-          <td>${s.avg_teleop_fuel}</td>
-          <td>${s.avg_auto_fuel}</td>
-          <td>${s.avg_shooting}/5</td>
-          <td><span class="badge ${s.climb_rate >= 60 ? 'badge-green' : s.climb_rate >= 30 ? 'badge-orange' : 'badge-red'}">${s.climb_rate}%</span></td>
-          <td><span class="badge ${s.foul_rate >= 50 ? 'badge-red' : 'badge-orange'}">${s.foul_rate}%</span></td>
-        </tr>`;
-      });
-      html += '</table>';
-      document.getElementById('winProbTable').innerHTML = html;
-    };
-
-    window.renderOverview = function () {
-      const stats = Object.values(window._teamStats);
-      if (!stats.length) {
-        document.getElementById('rankingsTable').innerHTML = '<div class="status-msg">No match data found for this event.</div>';
-        return;
-      }
-      stats.sort((a, b) => b.win_prob - a.win_prob);
-
-      let html = `<table><tr>
-        <th onclick="sortOverview('team')">Team</th>
-        <th onclick="sortOverview('matches')">Matches</th>
-        <th onclick="sortOverview('avg_teleop_fuel')">Teleop Fuel</th>
-        <th onclick="sortOverview('avg_auto_fuel')">Auto Fuel</th>
-        <th onclick="sortOverview('avg_shooting')">Shooting</th>
-        <th onclick="sortOverview('climb_rate')">Climb %</th>
-        <th onclick="sortOverview('foul_rate')">Foul %</th>
-        <th onclick="sortOverview('win_prob')">Win Prob</th>
-      </tr>`;
-      stats.forEach(s => {
-        const color = s.win_prob >= 65 ? '#4caf50' : s.win_prob >= 45 ? '#ff8601' : '#f44336';
-        html += `<tr>
-          <td><strong>${s.team}</strong>${String(s.team) === '1991' ? ' <span style="color:#ff8601; font-size:11px">★</span>' : ''}</td>
-          <td>${s.matches}</td>
-          <td>${s.avg_teleop_fuel}</td>
-          <td>${s.avg_auto_fuel}</td>
-          <td>${s.avg_shooting}/5</td>
-          <td><span class="badge ${s.climb_rate >= 60 ? 'badge-green' : s.climb_rate >= 30 ? 'badge-orange' : 'badge-red'}">${s.climb_rate}%</span></td>
-          <td><span class="badge ${s.foul_rate >= 50 ? 'badge-red' : 'badge-orange'}">${s.foul_rate}%</span></td>
-          <td><span style="color:${color}; font-weight:bold">${s.win_prob}%</span></td>
-        </tr>`;
-      });
-      html += '</table>';
-      document.getElementById('rankingsTable').innerHTML = html;
-    };
-
-    window.sortOverview = function (key) {
-      const stats = Object.values(window._teamStats);
-      stats.sort((a, b) => key === 'team' ? String(a.team).localeCompare(String(b.team)) : (b[key] || 0) - (a[key] || 0));
-      let html = `<table><tr>
-        <th onclick="sortOverview('team')">Team</th>
-        <th onclick="sortOverview('matches')">Matches</th>
-        <th onclick="sortOverview('avg_teleop_fuel')">Teleop Fuel</th>
-        <th onclick="sortOverview('avg_auto_fuel')">Auto Fuel</th>
-        <th onclick="sortOverview('avg_shooting')">Shooting</th>
-        <th onclick="sortOverview('climb_rate')">Climb %</th>
-        <th onclick="sortOverview('foul_rate')">Foul %</th>
-        <th onclick="sortOverview('win_prob')">Win Prob</th>
-      </tr>`;
-      stats.forEach(s => {
-        const color = s.win_prob >= 65 ? '#4caf50' : s.win_prob >= 45 ? '#ff8601' : '#f44336';
-        html += `<tr>
-          <td><strong>${s.team}</strong>${String(s.team) === '1991' ? ' <span style="color:#ff8601; font-size:11px">★</span>' : ''}</td>
-          <td>${s.matches}</td>
-          <td>${s.avg_teleop_fuel}</td>
-          <td>${s.avg_auto_fuel}</td>
-          <td>${s.avg_shooting}/5</td>
-          <td><span class="badge ${s.climb_rate >= 60 ? 'badge-green' : s.climb_rate >= 30 ? 'badge-orange' : 'badge-red'}">${s.climb_rate}%</span></td>
-          <td><span class="badge ${s.foul_rate >= 50 ? 'badge-red' : 'badge-orange'}">${s.foul_rate}%</span></td>
-          <td><span style="color:${color}; font-weight:bold">${s.win_prob}%</span></td>
-        </tr>`;
-      });
-      html += '</table>';
-      document.getElementById('rankingsTable').innerHTML = html;
-    };
-
-    window.renderMatchTable = function () {
-      const stats = Object.values(window._teamStats);
-      if (!stats.length) { document.getElementById('matchTable').innerHTML = '<div class="status-msg">No data loaded.</div>'; return; }
-      const key = document.getElementById('matchSortSelect').value;
-      stats.sort((a, b) => (b[key] || 0) - (a[key] || 0));
-      let html = `<table><tr>
-        <th>Team</th><th>Matches</th><th>Teleop</th><th>Auto</th>
-        <th>Shooting</th><th>Defense</th><th>Climb %</th><th>Auto Climb %</th>
-        <th>Best Climb</th><th>Pass %</th><th>Endgame %</th><th>Foul %</th><th>Win Prob</th>
-      </tr>`;
-      stats.forEach(s => {
-        const color = s.win_prob >= 65 ? '#4caf50' : s.win_prob >= 45 ? '#ff8601' : '#f44336';
-        html += `<tr>
-          <td><strong>${s.team}</strong></td>
-          <td>${s.matches}</td>
-          <td>${s.avg_teleop_fuel}</td>
-          <td>${s.avg_auto_fuel}</td>
-          <td>${s.avg_shooting}/5</td>
-          <td>${s.avg_defense}/5</td>
-          <td><span class="badge ${s.climb_rate >= 60 ? 'badge-green' : s.climb_rate >= 30 ? 'badge-orange' : 'badge-red'}">${s.climb_rate}%</span></td>
-          <td><span class="badge ${s.auto_climb_rate >= 50 ? 'badge-green' : 'badge-orange'}">${s.auto_climb_rate}%</span></td>
-          <td>${s.best_climb}</td>
-          <td>${s.pass_fuel_rate}%</td>
-          <td>${s.endgame_shooting_rate}%</td>
-          <td><span class="badge ${s.foul_rate >= 50 ? 'badge-red' : 'badge-orange'}">${s.foul_rate}%</span></td>
-          <td><span style="color:${color}; font-weight:bold">${s.win_prob}%</span></td>
-        </tr>`;
-      });
-      html += '</table>';
-      document.getElementById('matchTable').innerHTML = html;
-    };
-
-    window.renderPitCards = function () {
-      const filterVal = document.getElementById('pitFilterSelect').value;
-      let docs = window._pitDocs;
-      if (filterVal === 'swerve') docs = docs.filter(d => d.drive_train === 'swerve');
-      else if (filterVal === 'tank') docs = docs.filter(d => d.drive_train === 'tank');
-      else if (filterVal === 'auto_climb_yes') docs = docs.filter(d => d.auto_climb === 'yes');
-      else if (filterVal === 'automation_yes') docs = docs.filter(d => d.automation === 'yes');
-      else if (filterVal === 'ground_intake') docs = docs.filter(d => d.intake === 'ground' || d.intake === 'both');
-      else if (filterVal === 'chute_intake') docs = docs.filter(d => d.intake === 'chute' || d.intake === 'both');
-      else if (filterVal === 'bump_yes') docs = docs.filter(d => d.bump === 'yes');
-      else if (filterVal === 'trench_yes') docs = docs.filter(d => d.trench === 'yes');
-      else if (filterVal === 'L3_climb') docs = docs.filter(d => d.climb === 'L3' || d.climb === 'all');
-
-      if (!docs.length) {
-        document.getElementById('pitCards').innerHTML = '<div class="status-msg">No pit scouting data matches this filter.</div>';
-        return;
-      }
-      let html = '';
-      docs.forEach(d => {
-        const ms = window._teamStats[d.team];
-        html += `<div class="team-card">
-          <h3>Team ${d.team}${ms ? ` <span style="color:#888; font-size:13px; font-weight:normal">— ${ms.matches} match${ms.matches !== 1 ? 'es' : ''} · Win Prob: <span style="color:${ms.win_prob >= 65 ? '#4caf50' : ms.win_prob >= 45 ? '#ff8601' : '#f44336'}">${ms.win_prob}%</span></span>` : ''}</h3>
-          <div class="stat-grid">
-            <div class="stat-item"><div class="stat-label">Drive Train</div><div class="stat-value">${d.drive_train || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Swerve Type</div><div class="stat-value">${d.swerve_type || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Weight</div><div class="stat-value">${d.robot_weight ? d.robot_weight + ' lbs' : '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Dimensions</div><div class="stat-value">${d.robot_width && d.robot_length ? d.robot_width + '" × ' + d.robot_length + '"' : '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Fuel Capacity</div><div class="stat-value">${d.fuel_capacity || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Avg Fuel/Match</div><div class="stat-value">${d.avg_fuel || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Auto Climb</div><div class="stat-value">${d.auto_climb || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Climb Level</div><div class="stat-value">${d.climb || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Intake</div><div class="stat-value">${d.intake || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Automation</div><div class="stat-value">${d.automation || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Over Bump</div><div class="stat-value">${d.bump || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Under Trench</div><div class="stat-value">${d.trench || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Auto Starts</div><div class="stat-value">${d.auto_start || '—'}</div></div>
-            <div class="stat-item"><div class="stat-label">Auto Codes</div><div class="stat-value">${d.auto_count || '—'}</div></div>
-          </div>
-          ${d.automation_description ? `<div style="margin-top:10px; font-size:13px; color:#aaa;"><strong>Automation:</strong> ${d.automation_description}</div>` : ''}
-          ${d.climbs ? `<div style="margin-top:6px; font-size:13px; color:#aaa;"><strong>Climb Detail:</strong> ${d.climbs}</div>` : ''}
-          ${d.notes ? `<div style="margin-top:6px; font-size:13px; color:#aaa;"><strong>Notes:</strong> ${d.notes}</div>` : ''}
-        </div>`;
-      });
-      document.getElementById('pitCards').innerHTML = html;
-    };
-
-    window.renderCombinedTable = function () {
-      const stats = Object.values(window._teamStats);
-      if (!stats.length) { document.getElementById('combinedTable').innerHTML = '<div class="status-msg">No data loaded.</div>'; return; }
-      const key = document.getElementById('combinedSortSelect').value;
-      stats.sort((a, b) => (isNaN(b[key]) ? 0 : b[key] || 0) - (isNaN(a[key]) ? 0 : a[key] || 0));
-      let html = `<table><tr>
-        <th>Team</th><th>Score</th><th>Win Prob</th><th>Drive Train</th>
-        <th>Fuel Cap</th><th>Teleop</th><th>Auto</th><th>Shooting</th>
-        <th>Climb %</th><th>Auto Climb %</th><th>Automation</th><th>Foul %</th>
-      </tr>`;
-      stats.forEach(s => {
-        const color = s.win_prob >= 65 ? '#4caf50' : s.win_prob >= 45 ? '#ff8601' : '#f44336';
-        html += `<tr>
-          <td><strong>${s.team}</strong>${String(s.team) === '1991' ? ' <span style="color:#ff8601; font-size:11px">★</span>' : ''}</td>
-          <td><span class="combined-score">${s.combined_score}</span></td>
-          <td><span style="color:${color}; font-weight:bold">${s.win_prob}%</span></td>
-          <td>${s.drive_train || '—'}</td>
-          <td>${s.fuel_capacity || '—'}</td>
-          <td>${s.avg_teleop_fuel}</td>
-          <td>${s.avg_auto_fuel}</td>
-          <td>${s.avg_shooting}/5</td>
-          <td><span class="badge ${s.climb_rate >= 60 ? 'badge-green' : s.climb_rate >= 30 ? 'badge-orange' : 'badge-red'}">${s.climb_rate}%</span></td>
-          <td><span class="badge ${s.auto_climb_rate >= 50 ? 'badge-green' : 'badge-orange'}">${s.auto_climb_rate}%</span></td>
-          <td>${s.automation || '—'}</td>
-          <td><span class="badge ${s.foul_rate >= 50 ? 'badge-red' : 'badge-orange'}">${s.foul_rate}%</span></td>
-        </tr>`;
-      });
-      html += '</table>';
-      document.getElementById('combinedTable').innerHTML = html;
-    };
-
-    window.renderCharts = function () {
-      const stats = Object.values(window._teamStats);
-      if (!stats.length) return;
-      const metric = document.getElementById('chartMetric')?.value || 'avg_teleop_fuel';
-      stats.sort((a, b) => (b[metric] || 0) - (a[metric] || 0));
-      const labels = stats.map(s => String(s.team));
-      const values = stats.map(s => s[metric] || 0);
-      const metricLabels = {
-        avg_teleop_fuel: 'Avg Teleop Fuel', avg_auto_fuel: 'Avg Auto Fuel',
-        avg_shooting: 'Avg Shooting Accuracy', avg_defense: 'Avg Defense Rating',
-        climb_rate: 'Climb Rate (%)', auto_climb_rate: 'Auto Climb Rate (%)',
-        foul_rate: 'Foul Rate (%)', pass_fuel_rate: 'Pass Fuel Rate (%)',
-        lining_up_rate: 'Lining Up Rate (%)', endgame_shooting_rate: 'Endgame Shooting Rate (%)',
-        win_prob: 'Win Probability (%)', combined_score: 'Combined Score', matches: 'Matches Scouted'
-      };
-
-      if (window._chartInstance) window._chartInstance.destroy();
-      window._chartInstance = new Chart(document.getElementById('mainChart').getContext('2d'), {
-        type: 'bar',
-        data: { labels, datasets: [{ label: metricLabels[metric] || metric, data: values, backgroundColor: '#ff8601', borderRadius: 6 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#333' } }, y: { ticks: { color: 'white' }, grid: { color: '#333' } } } }
-      });
-
-      // Climb pie
-      const climbTotals = { L1: 0, L2: 0, L3: 0, attempted_failed: 0, not_attempted: 0 };
-      window._matchDocs.forEach(d => { if (d.climb_level && climbTotals[d.climb_level] !== undefined) climbTotals[d.climb_level]++; });
-      if (window._climbPie) window._climbPie.destroy();
-      window._climbPie = new Chart(document.getElementById('climbPieChart').getContext('2d'), {
-        type: 'doughnut',
-        data: { labels: ['L1', 'L2', 'L3', 'Failed', 'Not Attempted'], datasets: [{ data: Object.values(climbTotals), backgroundColor: ['#4caf50', '#2196f3', '#9c27b0', '#ff5722', '#555'] }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white', font: { size: 11 } } }, title: { display: true, text: 'Endgame Climb', color: '#ff8601' } } }
-      });
-
-      // Auto climb pie
-      let autoYes = 0, autoNo = 0;
-      window._matchDocs.forEach(d => { d.auto_climb === 'yes' ? autoYes++ : autoNo++; });
-      if (window._autoClimbPie) window._autoClimbPie.destroy();
-      window._autoClimbPie = new Chart(document.getElementById('autoClimbPieChart').getContext('2d'), {
-        type: 'doughnut',
-        data: { labels: ['Climbed', 'Did Not Climb'], datasets: [{ data: [autoYes, autoNo], backgroundColor: ['#ff8601', '#333'] }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white', font: { size: 11 } } }, title: { display: true, text: 'Auto Climb', color: '#ff8601' } } }
-      });
-
-      // Drive train
-      const driveCounts = {};
-      window._pitDocs.forEach(d => { if (d.drive_train) driveCounts[d.drive_train] = (driveCounts[d.drive_train] || 0) + 1; });
-      if (window._driveChart) window._driveChart.destroy();
-      window._driveChart = new Chart(document.getElementById('driveChart').getContext('2d'), {
-        type: 'bar',
-        data: { labels: Object.keys(driveCounts), datasets: [{ label: '# of Teams', data: Object.values(driveCounts), backgroundColor: '#ff8601', borderRadius: 6 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#333' } }, y: { ticks: { color: 'white', stepSize: 1 }, grid: { color: '#333' } } } }
-      });
-
-      // Intake
-      const intakeCounts = {};
-      window._pitDocs.forEach(d => { if (d.intake) intakeCounts[d.intake] = (intakeCounts[d.intake] || 0) + 1; });
-      if (window._intakeChart) window._intakeChart.destroy();
-      window._intakeChart = new Chart(document.getElementById('intakeChart').getContext('2d'), {
-        type: 'doughnut',
-        data: { labels: Object.keys(intakeCounts), datasets: [{ data: Object.values(intakeCounts), backgroundColor: ['#4caf50', '#2196f3', '#ff8601'] }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } } }
-      });
-
-      // Automation
-      let autoUse = 0, noAutoUse = 0;
-      window._pitDocs.forEach(d => { d.automation === 'yes' ? autoUse++ : noAutoUse++; });
-      if (window._automationChart) window._automationChart.destroy();
-      window._automationChart = new Chart(document.getElementById('automationChart').getContext('2d'), {
-        type: 'doughnut',
-        data: { labels: ['Uses Automation', 'No Automation'], datasets: [{ data: [autoUse, noAutoUse], backgroundColor: ['#ff8601', '#333'] }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } } }
-      });
-
-      // Win probability bar chart
-      const wpStats = Object.values(window._teamStats).sort((a, b) => b.win_prob - a.win_prob);
-      const wpColors = wpStats.map(s => s.win_prob >= 65 ? '#4caf50' : s.win_prob >= 45 ? '#ff8601' : '#f44336');
-      if (window._winProbChart) window._winProbChart.destroy();
-      window._winProbChart = new Chart(document.getElementById('winProbChart').getContext('2d'), {
-        type: 'bar',
-        data: { labels: wpStats.map(s => String(s.team)), datasets: [{ label: 'Win Probability (%)', data: wpStats.map(s => s.win_prob), backgroundColor: wpColors, borderRadius: 6 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#333' } }, y: { ticks: { color: 'white' }, grid: { color: '#333' }, min: 0, max: 100 } } }
-      });
-    };
-
-    window.showTab = function (name) {
-      ['overview', 'match', 'pit', 'combined', 'winprob', 'alliance', 'charts'].forEach(t => {
-        document.getElementById('tab-' + t).style.display = t === name ? 'block' : 'none';
-      });
-      document.querySelectorAll('.tab').forEach((el, i) => {
-        el.classList.toggle('active', ['overview', 'match', 'pit', 'combined', 'winprob', 'alliance', 'charts'][i] === name);
-      });
-      if (name === 'charts') renderCharts();
-    };
-  </script>
-
-</body>
-</html>
+      document.getElementById('teamDetailContent').innerHTML = html;
