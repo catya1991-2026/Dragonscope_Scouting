@@ -1,14 +1,13 @@
-html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>1991 Analytics</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>1991 Analytics – DragonScope</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; padding: 0; background: #111; color: white; font-family: sans-serif; }
+
     .site-header {
       background: #ff8601;
       color: black;
@@ -37,6 +36,7 @@ html
       font-weight: bold;
     }
     .nav-buttons .button:hover { background: #ff8601; color: black; }
+
     .controls {
       max-width: 700px;
       margin: 0 auto 20px auto;
@@ -63,6 +63,7 @@ html
       font-size: 15px;
       width: 100%;
     }
+    select:disabled { opacity: 0.5; }
     .load-btn {
       background: #ff8601;
       color: black;
@@ -76,6 +77,7 @@ html
       white-space: nowrap;
     }
     .load-btn:disabled { background: #888; cursor: not-allowed; }
+
     .dark-card {
       background: #1a1a1a;
       border-radius: 16px;
@@ -86,6 +88,7 @@ html
     }
     .card-title { color: #ff8601; font-size: 18px; font-weight: bold; margin-bottom: 16px; }
     .chart-wrap { position: relative; width: 100%; height: 300px; }
+
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th {
       background: #2a2a2a;
@@ -98,6 +101,7 @@ html
     th:hover { background: #333; }
     td { padding: 10px 8px; border-bottom: 1px solid #2a2a2a; }
     tr:hover td { background: #222; }
+
     .badge {
       display: inline-block;
       padding: 2px 8px;
@@ -105,17 +109,18 @@ html
       font-size: 12px;
       font-weight: bold;
     }
-    .badge-green { background: #1a4a1a; color: #4caf50; }
-    .badge-red { background: #4a1a1a; color: #f44336; }
+    .badge-green  { background: #1a4a1a; color: #4caf50; }
+    .badge-red    { background: #4a1a1a; color: #f44336; }
     .badge-orange { background: #4a2a00; color: #ff8601; }
-    .badge-blue { background: #001a4a; color: #2196f3; }
+    .badge-blue   { background: #001a4a; color: #2196f3; }
+
     .status-msg { text-align: center; color: #888; padding: 40px; font-size: 16px; }
-    .team-card { background: #222; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-    .team-card h3 { margin: 0 0 10px 0; color: #ff8601; font-size: 16px; }
+
     .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
     .stat-item { background: #2a2a2a; border-radius: 8px; padding: 8px 10px; }
     .stat-item .stat-label { font-size: 11px; color: #888; margin-bottom: 2px; }
     .stat-item .stat-value { font-size: 16px; font-weight: bold; color: white; }
+
     .tabs {
       display: flex;
       gap: 6px;
@@ -136,16 +141,14 @@ html
       min-width: 70px;
     }
     .tab.active { background: #ff8601; color: black; }
-    .combined-score { font-size: 20px; font-weight: bold; color: #ff8601; }
 
-    /* Alliance picker */
+    /* Alliance */
     .alliance-selects {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 12px;
       margin-bottom: 16px;
     }
-    .alliance-selects select { font-size: 13px; }
     .alliance-result { background: #222; border-radius: 12px; padding: 16px; margin-top: 8px; }
     .alliance-team-row {
       display: flex;
@@ -165,12 +168,11 @@ html
     .suggestion-card.rank-1 { border-color: #4caf50; background: #1a3a1a; }
     .suggestion-card.rank-2 { border-color: #ff8601; background: #2a1e0a; }
     .suggestion-card.rank-3 { border-color: #2196f3; background: #0a1a2a; }
-    .suggestion-rank { font-size: 12px; color: #888; margin-bottom: 6px; }
-    .suggestion-teams { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
-    .suggestion-prob { font-size: 28px; font-weight: bold; }
-    .suggestion-stats { font-size: 12px; color: #aaa; margin-top: 6px; }
+    .suggestion-rank   { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .suggestion-teams  { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
+    .suggestion-stats  { font-size: 12px; color: #aaa; margin-top: 6px; }
 
-    /* Team detail / individual match view */
+    /* Team detail */
     .team-detail-header {
       display: flex;
       align-items: center;
@@ -178,11 +180,7 @@ html
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
-    .team-detail-number {
-      font-size: 28px;
-      font-weight: bold;
-      color: #ff8601;
-    }
+    .team-detail-number { font-size: 28px; font-weight: bold; color: #ff8601; }
     .team-detail-back {
       background: #2a2a2a;
       color: #ff8601;
@@ -194,6 +192,7 @@ html
       cursor: pointer;
     }
     .team-detail-back:hover { background: #333; }
+
     .match-card {
       background: #1e1e1e;
       border: 1px solid #2a2a2a;
@@ -209,17 +208,8 @@ html
       flex-wrap: wrap;
       gap: 6px;
     }
-    .match-card-title {
-      font-weight: bold;
-      font-size: 15px;
-      color: #ff8601;
-    }
-    .match-card-stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
+    .match-card-title { font-weight: bold; font-size: 15px; color: #ff8601; }
+    .match-card-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
     .match-stat-chip {
       background: #2a2a2a;
       border-radius: 6px;
@@ -238,14 +228,9 @@ html
       margin-top: 8px;
       line-height: 1.5;
     }
-    .match-notes-none {
-      font-size: 12px;
-      color: #444;
-      font-style: italic;
-      margin-top: 6px;
-    }
+    .match-notes-none { font-size: 12px; color: #444; font-style: italic; margin-top: 6px; }
 
-    /* Clickable team name in table */
+    /* Clickable team in table */
     .team-link {
       color: #ff8601;
       cursor: pointer;
@@ -255,7 +240,7 @@ html
     }
     .team-link:hover { color: white; }
 
-    /* Pit notes styling */
+    /* Pit notes */
     .pit-notes-block {
       margin-top: 10px;
       background: #141414;
@@ -275,462 +260,885 @@ html
       margin-bottom: 4px;
     }
 
+    /* Pit cards */
+    .team-card { background: #222; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+    .team-card h3 { margin: 0 0 10px 0; color: #ff8601; font-size: 16px; }
+
+    .combined-score { font-size: 20px; font-weight: bold; color: #ff8601; }
+
     footer { text-align: center; color: #555; font-size: 13px; padding: 16px; }
   </style>
 </head>
 <body>
 
-  <div class="site-header">DRAGONSCOPE</div>
+<div class="site-header">DRAGONSCOPE</div>
 
-  <div class="nav-buttons">
-    <a class="button" href="index.html">Home</a>
-    <a class="button" href="pit.html">Pit Scouting</a>
-    <a class="button" href="match.html">Match Scouting</a>
+<div class="nav-buttons">
+  <a class="button" href="index.html">Home</a>
+  <a class="button" href="pit.html">Pit Scouting</a>
+  <a class="button" href="match.html">Match Scouting</a>
+</div>
+
+<div class="controls">
+  <div class="control-group">
+    <label>Event</label>
+    <select id="eventSelect">
+      <option value="">Select an event...</option>
+      <option value="2026mabil">2026 Minuteman</option>
+      <option value="2026mawne">2026 Western NE</option>
+      <option value="2026ctwat">2026 Waterbury</option>
+      <option value="2026rikin">2026 URI</option>
+      <option value="2026cthar">2026 Hartford</option>
+    </select>
   </div>
+  <div class="control-group">
+    <label>Team (optional)</label>
+    <select id="teamSelect" disabled>
+      <option value="">All Teams</option>
+    </select>
+  </div>
+  <button class="load-btn" id="loadBtn" onclick="loadData()">Load Data</button>
+</div>
 
-  <div class="controls">
-    <div class="control-group">
-      <label>Event</label>
-      <select id="eventSelect">
-        <option value="">Select an event...</option>
-        <option value="2026mabil">2026 Minuteman</option>
-        <option value="2026mawne">2026 Western NE</option>
-        <option value="2026ctwat">2026 Waterbury</option>
-        <option value="2026rikin">2026 URI</option>
-        <option value="2026cthar">2026 Hartford</option>
-      </select>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('overview')">Overview</div>
+  <div class="tab" onclick="showTab('match')">Match Stats</div>
+  <div class="tab" onclick="showTab('pit')">Pit Data</div>
+  <div class="tab" onclick="showTab('combined')">Combined</div>
+  <div class="tab" onclick="showTab('alliance')">Alliance</div>
+  <div class="tab" onclick="showTab('charts')">Charts</div>
+</div>
+
+<!-- OVERVIEW TAB -->
+<div id="tab-overview">
+  <div class="dark-card">
+    <div class="card-title">Team Rankings</div>
+    <div id="rankingsTable"><div class="status-msg">Select an event and click Load Data</div></div>
+  </div>
+</div>
+
+<!-- MATCH TAB -->
+<div id="tab-match" style="display:none">
+  <!-- Individual team detail -->
+  <div class="dark-card" id="teamDetailCard" style="display:none">
+    <div class="team-detail-header">
+      <button class="team-detail-back" onclick="closeTeamDetail()">← Back to All Teams</button>
+      <div class="team-detail-number" id="teamDetailTitle"></div>
+      <div id="teamDetailSummary" style="color:#888; font-size:13px;"></div>
     </div>
-    <div class="control-group">
-      <label>Team (optional)</label>
-      <select id="teamSelect" disabled>
-        <option value="">All Teams</option>
-      </select>
+    <div id="teamDetailContent"></div>
+  </div>
+  <!-- Match stats table -->
+  <div class="dark-card" id="matchTableCard">
+    <div class="card-title">
+      Match Scouting — Sort By
+      <span style="font-size:12px; color:#888; font-weight:normal; margin-left:8px;">Click a team number to see their individual matches &amp; notes</span>
     </div>
-    <button class="load-btn" id="loadBtn" onclick="loadData()">Load Data</button>
+    <select id="matchSortSelect" onchange="renderMatchTable()" style="margin-bottom:16px">
+      <option value="avg_teleop_fuel">Avg Teleop Fuel</option>
+      <option value="avg_auto_fuel">Avg Auto Fuel</option>
+      <option value="climb_rate">Climb Rate (%)</option>
+      <option value="auto_climb_rate">Auto Climb Rate (%)</option>
+      <option value="avg_shooting">Avg Shooting Accuracy</option>
+      <option value="avg_defense">Avg Defense Rating</option>
+      <option value="foul_rate">Foul Rate (%)</option>
+      <option value="pass_fuel_rate">Pass Fuel Rate (%)</option>
+      <option value="lining_up_rate">Lining Up Rate (%)</option>
+      <option value="endgame_shooting_rate">Endgame Shooting Rate (%)</option>
+      <option value="matches">Matches Scouted</option>
+    </select>
+    <div id="matchTable"><div class="status-msg">Load data first</div></div>
   </div>
+</div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="showTab('overview')">Overview</div>
-    <div class="tab" onclick="showTab('match')">Match Stats</div>
-    <div class="tab" onclick="showTab('pit')">Pit Data</div>
-    <div class="tab" onclick="showTab('combined')">Combined</div>
-    <div class="tab" onclick="showTab('alliance')">Alliance</div>
-    <div class="tab" onclick="showTab('charts')">Charts</div>
+<!-- PIT TAB -->
+<div id="tab-pit" style="display:none">
+  <div class="dark-card">
+    <div class="card-title">Pit Scouting — Filter By</div>
+    <select id="pitFilterSelect" onchange="renderPitCards()" style="margin-bottom:16px">
+      <option value="all">All Teams</option>
+      <option value="swerve">Swerve Drive Only</option>
+      <option value="tank">Tank Drive Only</option>
+      <option value="auto_climb_yes">Can Auto Climb</option>
+      <option value="automation_yes">Uses Automation</option>
+      <option value="ground_intake">Ground Intake</option>
+      <option value="chute_intake">Chute Intake</option>
+      <option value="bump_yes">Can Go Over Bump</option>
+      <option value="trench_yes">Can Go Under Trench</option>
+      <option value="L3_climb">Can Climb L3</option>
+    </select>
+    <div id="pitCards"><div class="status-msg">Load data first</div></div>
   </div>
+</div>
 
-  <!-- OVERVIEW TAB -->
-  <div id="tab-overview">
-    <div class="dark-card">
-      <div class="card-title">Team Rankings</div>
-      <div id="rankingsTable"><div class="status-msg">Select an event and click Load Data</div></div>
-    </div>
+<!-- COMBINED TAB -->
+<div id="tab-combined" style="display:none">
+  <div class="dark-card">
+    <div class="card-title">Combined Pit + Match Analysis — Sort By</div>
+    <select id="combinedSortSelect" onchange="renderCombinedTable()" style="margin-bottom:16px">
+      <option value="combined_score">Combined Score</option>
+      <option value="avg_teleop_fuel">Avg Teleop Fuel</option>
+      <option value="avg_auto_fuel">Avg Auto Fuel</option>
+      <option value="climb_rate">Climb Rate (%)</option>
+      <option value="avg_shooting">Avg Shooting Accuracy</option>
+      <option value="avg_defense">Avg Defense Rating</option>
+    </select>
+    <div id="combinedTable"><div class="status-msg">Load data first</div></div>
   </div>
+</div>
 
-  <!-- MATCH TAB -->
-  <div id="tab-match" style="display:none">
-
-    <!-- Individual team detail view -->
-    <div class="dark-card" id="teamDetailCard" style="display:none">
-      <div class="team-detail-header">
-        <button class="team-detail-back" onclick="closeTeamDetail()">← Back to All Teams</button>
-        <div class="team-detail-number" id="teamDetailTitle"></div>
-        <div id="teamDetailSummary" style="color:#888; font-size:13px;"></div>
+<!-- ALLIANCE TAB -->
+<div id="tab-alliance" style="display:none">
+  <div class="dark-card">
+    <div class="card-title">Alliance Calculator</div>
+    <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Select up to 3 teams to compare their combined stats.</p>
+    <div class="alliance-selects">
+      <div>
+        <div style="color:#ff8601; font-weight:bold; font-size:13px; margin-bottom:6px;">Team 1 (You)</div>
+        <select id="alliancePick1" onchange="calcAlliance()"><option value="">Select team...</option></select>
       </div>
-      <div id="teamDetailContent"></div>
-    </div>
-
-    <!-- Normal match stats table -->
-    <div class="dark-card" id="matchTableCard">
-      <div class="card-title">
-        Match Scouting — Sort By
-        <span style="font-size:12px; color:#888; font-weight:normal; margin-left:8px;">Click a team number to see their individual matches &amp; notes</span>
+      <div>
+        <div style="color:#aaa; font-weight:bold; font-size:13px; margin-bottom:6px;">Team 2</div>
+        <select id="alliancePick2" onchange="calcAlliance()"><option value="">Select team...</option></select>
       </div>
-      <select id="matchSortSelect" onchange="renderMatchTable()" style="margin-bottom:16px">
-        <option value="avg_teleop_fuel">Avg Teleop Fuel</option>
-        <option value="avg_auto_fuel">Avg Auto Fuel</option>
-        <option value="climb_rate">Climb Rate (%)</option>
-        <option value="auto_climb_rate">Auto Climb Rate (%)</option>
-        <option value="avg_shooting">Avg Shooting Accuracy</option>
-        <option value="avg_defense">Avg Defense Rating</option>
-        <option value="foul_rate">Foul Rate (%)</option>
-        <option value="pass_fuel_rate">Pass Fuel Rate (%)</option>
-        <option value="lining_up_rate">Lining Up Rate (%)</option>
-        <option value="endgame_shooting_rate">Endgame Shooting Rate (%)</option>
-        <option value="matches">Matches Scouted</option>
-      </select>
-      <div id="matchTable"><div class="status-msg">Load data first</div></div>
+      <div>
+        <div style="color:#aaa; font-weight:bold; font-size:13px; margin-bottom:6px;">Team 3</div>
+        <select id="alliancePick3" onchange="calcAlliance()"><option value="">Select team...</option></select>
+      </div>
+    </div>
+    <div id="allianceResult"><div class="status-msg">Select teams above to compare</div></div>
+  </div>
+  <div class="dark-card">
+    <div class="card-title">Best Alliance Suggestions for Team 1991</div>
+    <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Top 3 partner combinations by combined score.</p>
+    <div id="allianceSuggestions"><div class="status-msg">Load data first</div></div>
+  </div>
+</div>
+
+<!-- CHARTS TAB -->
+<div id="tab-charts" style="display:none">
+  <div class="dark-card">
+    <div class="card-title">Chart Metric</div>
+    <select id="chartMetric" onchange="renderCharts()" style="margin-bottom:20px">
+      <option value="avg_teleop_fuel">Avg Teleop Fuel per Team</option>
+      <option value="avg_auto_fuel">Avg Auto Fuel per Team</option>
+      <option value="avg_shooting">Avg Shooting Accuracy</option>
+      <option value="avg_defense">Avg Defense Rating</option>
+      <option value="climb_rate">Climb Rate (%)</option>
+      <option value="auto_climb_rate">Auto Climb Rate (%)</option>
+      <option value="foul_rate">Foul Rate (%)</option>
+      <option value="pass_fuel_rate">Pass Fuel Rate (%)</option>
+      <option value="lining_up_rate">Lining Up Rate (%)</option>
+      <option value="endgame_shooting_rate">Endgame Shooting Rate (%)</option>
+      <option value="combined_score">Combined Score</option>
+      <option value="matches">Matches Scouted</option>
+    </select>
+    <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+  </div>
+  <div class="dark-card">
+    <div class="card-title">Climb Results Breakdown</div>
+    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:200px;"><div class="chart-wrap" style="height:220px"><canvas id="climbPieChart"></canvas></div></div>
+      <div style="flex:1; min-width:200px;"><div class="chart-wrap" style="height:220px"><canvas id="autoClimbPieChart"></canvas></div></div>
     </div>
   </div>
-
-  <!-- PIT TAB -->
-  <div id="tab-pit" style="display:none">
-    <div class="dark-card">
-      <div class="card-title">Pit Scouting — Filter By</div>
-      <select id="pitFilterSelect" onchange="renderPitCards()" style="margin-bottom:16px">
-        <option value="all">All Teams</option>
-        <option value="swerve">Swerve Drive Only</option>
-        <option value="tank">Tank Drive Only</option>
-        <option value="auto_climb_yes">Can Auto Climb</option>
-        <option value="automation_yes">Uses Automation</option>
-        <option value="ground_intake">Ground Intake</option>
-        <option value="chute_intake">Chute Intake</option>
-        <option value="bump_yes">Can Go Over Bump</option>
-        <option value="trench_yes">Can Go Under Trench</option>
-        <option value="L3_climb">Can Climb L3</option>
-      </select>
-      <div id="pitCards"><div class="status-msg">Load data first</div></div>
-    </div>
+  <div class="dark-card">
+    <div class="card-title">Drive Train Distribution (Pit)</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="driveChart"></canvas></div>
   </div>
-
-  <!-- COMBINED TAB -->
-  <div id="tab-combined" style="display:none">
-    <div class="dark-card">
-      <div class="card-title">Combined Pit + Match Analysis — Sort By</div>
-      <select id="combinedSortSelect" onchange="renderCombinedTable()" style="margin-bottom:16px">
-        <option value="combined_score">Combined Score</option>
-        <option value="avg_teleop_fuel">Avg Teleop Fuel</option>
-        <option value="avg_auto_fuel">Avg Auto Fuel</option>
-        <option value="climb_rate">Climb Rate (%)</option>
-        <option value="avg_shooting">Avg Shooting Accuracy</option>
-        <option value="avg_defense">Avg Defense Rating</option>
-      </select>
-      <div id="combinedTable"><div class="status-msg">Load data first</div></div>
-    </div>
+  <div class="dark-card">
+    <div class="card-title">Intake Type Distribution (Pit)</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="intakeChart"></canvas></div>
   </div>
+  <div class="dark-card">
+    <div class="card-title">Automation Usage (Pit)</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="automationChart"></canvas></div>
+  </div>
+</div>
 
-  <!-- ALLIANCE PICKER TAB -->
-  <div id="tab-alliance" style="display:none">
-    <div class="dark-card">
-      <div class="card-title">Alliance Calculator</div>
-      <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Select up to 3 teams to compare their combined stats.</p>
-      <div class="alliance-selects">
-        <div>
-          <div style="color:#ff8601; font-weight:bold; font-size:13px; margin-bottom:6px;">Team 1 (You)</div>
-          <select id="alliancePick1" onchange="calcAlliance()">
-            <option value="">Select team...</option>
-          </select>
+<footer>Developed by Catie | Team 1991</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3wq_x0FMP5q9FnKa_ppTCiVI_OijTDEU",
+    authDomain: "dragon-bdc86.firebaseapp.com",
+    projectId: "dragon-bdc86",
+    storageBucket: "dragon-bdc86.firebasestorage.app",
+    messagingSenderId: "516398791570",
+    appId: "1:516398791570:web:11063eaac685b9ad29df4b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ── State ──────────────────────────────────────────────────────────────────
+  let teamsData = {};
+  let _matchDocs = [];
+  let _pitDocs = [];
+  let _teamStats = {};
+  let _pitByTeam = {};
+  let _matchesByTeam = {};
+  let _chartInstance = null;
+  let _climbPie = null;
+  let _autoClimbPie = null;
+  let _driveChart = null;
+  let _intakeChart = null;
+  let _automationChart = null;
+
+  fetch('teams.json')
+    .then(r => r.json())
+    .then(d => { teamsData = d; })
+    .catch(e => console.error('teams.json error:', e));
+
+  // ── Event dropdown → populate team dropdown ────────────────────────────────
+  document.getElementById('eventSelect').addEventListener('change', function () {
+    const eventKey = this.value;
+    const teamSel = document.getElementById('teamSelect');
+    teamSel.innerHTML = '<option value="">All Teams</option>';
+    if (eventKey && teamsData[eventKey]) {
+      teamsData[eventKey].forEach(t => {
+        const o = document.createElement('option');
+        o.value = t.number;
+        o.textContent = `${t.number} – ${t.name}`;
+        teamSel.appendChild(o);
+      });
+      teamSel.disabled = false;
+    } else {
+      teamSel.disabled = true;
+    }
+  });
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function rangeMid(val) {
+    if (!val) return 0;
+    if (val === '100+') return 105;
+    if (val === '30+') return 33;
+    const parts = val.split('-');
+    if (parts.length === 2) return (parseInt(parts[0]) + parseInt(parts[1])) / 2;
+    return parseInt(val) || 0;
+  }
+
+  function bestClimb(climbs) {
+    const order = ['L3', 'L2', 'L1', 'attempted_failed', 'not_attempted'];
+    for (const c of order) { if (climbs[c]) return c; }
+    return '—';
+  }
+
+  function climbBadgeHtml(level) {
+    if (!level || level === '—') return '';
+    const cls = level === 'L3' ? 'badge-green' : level === 'L2' ? 'badge-blue' : level === 'L1' ? 'badge-orange' : 'badge-red';
+    return `<span class="badge ${cls}">${level}</span>`;
+  }
+
+  function destroyChart(c) { if (c) { try { c.destroy(); } catch(e) {} } return null; }
+
+  // ── Tab switcher ───────────────────────────────────────────────────────────
+  window.showTab = function(name) {
+    ['overview','match','pit','combined','alliance','charts'].forEach(t => {
+      const el = document.getElementById('tab-' + t);
+      if (el) el.style.display = (t === name ? '' : 'none');
+    });
+    document.querySelectorAll('.tab').forEach((el, i) => {
+      const tabs = ['overview','match','pit','combined','alliance','charts'];
+      el.classList.toggle('active', tabs[i] === name);
+    });
+    if (name === 'charts') renderCharts();
+  };
+
+  // ── Load Data ──────────────────────────────────────────────────────────────
+  window.loadData = async function () {
+    const eventKey = document.getElementById('eventSelect').value;
+    const teamFilter = document.getElementById('teamSelect').value;
+    if (!eventKey) { alert('Please select an event first.'); return; }
+
+    const btn = document.getElementById('loadBtn');
+    btn.disabled = true;
+    btn.textContent = 'Loading...';
+
+    try {
+      // Always fetch ALL teams for the event so tables show everyone
+      const mQuery = query(collection(db, "match_scouting"), where("event", "==", eventKey));
+      const mSnap = await getDocs(mQuery);
+      let matchDocs = mSnap.docs.map(d => d.data());
+
+      const pQuery = query(collection(db, "pit_scouting"), where("event", "==", eventKey));
+      const pSnap = await getDocs(pQuery);
+      let pitDocs = pSnap.docs.map(d => d.data());
+
+      _matchDocs = matchDocs;
+      _pitDocs = pitDocs;
+
+      // Group raw match docs by team
+      _matchesByTeam = {};
+      matchDocs.forEach(d => {
+        if (!d.team) return;
+        const key = String(d.team);
+        if (!_matchesByTeam[key]) _matchesByTeam[key] = [];
+        _matchesByTeam[key].push(d);
+      });
+
+      _pitByTeam = {};
+      pitDocs.forEach(d => { if (d.team) _pitByTeam[String(d.team)] = d; });
+
+      // Compute per-team stats
+      const stats = {};
+      matchDocs.forEach(d => {
+        const t = String(d.team);
+        if (!t || t === 'undefined') return;
+        if (!stats[t]) stats[t] = {
+          team: t, matches: 0,
+          teleop_fuel_total: 0, auto_fuel_total: 0,
+          shoot_total: 0, shoot_count: 0,
+          defense_total: 0, defense_count: 0,
+          climbs: {}, auto_climbs: 0,
+          fouls: 0, lining_up: 0,
+          pass_fuel: 0, endgame_shooting: 0
+        };
+        const s = stats[t];
+        s.matches++;
+        s.teleop_fuel_total += rangeMid(d.teleop_fuel);
+        s.auto_fuel_total   += rangeMid(d.auto_fuel);
+        if (d.shooting_accuracy) { s.shoot_total  += parseInt(d.shooting_accuracy); s.shoot_count++; }
+        if (d.defense_rating)    { s.defense_total += parseInt(d.defense_rating);   s.defense_count++; }
+        if (d.climb_level) s.climbs[d.climb_level] = (s.climbs[d.climb_level] || 0) + 1;
+        if (d.auto_climb    === 'yes') s.auto_climbs++;
+        if (d.fouls         === 'yes') s.fouls++;
+        if (d.lining_up     === 'yes') s.lining_up++;
+        if (d.pass_fuel     === 'yes') s.pass_fuel++;
+        if (d.endgame_shooting === 'yes') s.endgame_shooting++;
+      });
+
+      Object.values(stats).forEach(s => {
+        s.avg_teleop_fuel = s.matches ? +(s.teleop_fuel_total / s.matches).toFixed(1) : 0;
+        s.avg_auto_fuel   = s.matches ? +(s.auto_fuel_total   / s.matches).toFixed(1) : 0;
+        s.avg_shooting    = s.shoot_count   ? +(s.shoot_total   / s.shoot_count).toFixed(2)   : 0;
+        s.avg_defense     = s.defense_count ? +(s.defense_total / s.defense_count).toFixed(2) : 0;
+
+        const climbAttempts = Object.entries(s.climbs)
+          .filter(([k]) => k !== 'not_attempted')
+          .reduce((a, [, v]) => a + v, 0);
+
+        s.climb_rate           = s.matches ? +((climbAttempts     / s.matches) * 100).toFixed(0) : 0;
+        s.auto_climb_rate      = s.matches ? +((s.auto_climbs      / s.matches) * 100).toFixed(0) : 0;
+        s.foul_rate            = s.matches ? +((s.fouls            / s.matches) * 100).toFixed(0) : 0;
+        s.lining_up_rate       = s.matches ? +((s.lining_up        / s.matches) * 100).toFixed(0) : 0;
+        s.pass_fuel_rate       = s.matches ? +((s.pass_fuel        / s.matches) * 100).toFixed(0) : 0;
+        s.endgame_shooting_rate= s.matches ? +((s.endgame_shooting / s.matches) * 100).toFixed(0) : 0;
+        s.best_climb = bestClimb(s.climbs);
+
+        const pit = _pitByTeam[s.team] || {};
+        const fuelCapBonus = pit.fuel_capacity ? Math.min(parseInt(pit.fuel_capacity) / 10, 5) : 0;
+        s.fuel_capacity = pit.fuel_capacity || '—';
+        s.drive_train   = pit.drive_train   || '—';
+        s.automation    = pit.automation    || '—';
+        s.intake        = pit.intake        || '—';
+
+        s.combined_score = +(
+          (s.avg_teleop_fuel * 1.0) +
+          (s.avg_auto_fuel   * 1.5) +
+          (s.avg_shooting    * 3)   +
+          (s.climb_rate      * 0.1) +
+          (s.auto_climb_rate * 0.15)+
+          fuelCapBonus -
+          (s.foul_rate * 0.05)
+        ).toFixed(1);
+      });
+
+      _teamStats = stats;
+
+      populateAllianceDropdowns();
+      renderOverview();
+      renderMatchTable();
+      renderPitCards();
+      renderCombinedTable();
+      renderAllianceSuggestions();
+
+      // If a specific team was filtered, jump straight to their detail
+      if (teamFilter) {
+        const key = String(teamFilter);
+        showTab('match');
+        openTeamDetail(key);
+      }
+
+    } catch (err) {
+      alert('Error loading data: ' + err.message);
+      console.error(err);
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Load Data';
+  };
+
+  // ── Team Detail View ───────────────────────────────────────────────────────
+  window.openTeamDetail = function (teamNum) {
+    const key = String(teamNum);
+    const matches = _matchesByTeam[key] || [];
+    const stats   = _teamStats[key]     || {};
+    const pit     = _pitByTeam[key]     || {};
+
+    document.getElementById('teamDetailTitle').textContent = `Team ${key}`;
+    document.getElementById('teamDetailSummary').textContent =
+      `${matches.length} match${matches.length !== 1 ? 'es' : ''} scouted · ` +
+      `Avg Teleop: ${stats.avg_teleop_fuel || 0} · ` +
+      `Avg Auto: ${stats.avg_auto_fuel || 0} · ` +
+      `Climb: ${stats.climb_rate || 0}%`;
+
+    let html = '';
+
+    // Pit notes
+    if (pit.notes && pit.notes.trim()) {
+      html += `<div style="margin-bottom:16px">
+        <div class="pit-notes-label">🔧 Pit Scouting Notes</div>
+        <div class="pit-notes-block">${pit.notes}</div>
+      </div>`;
+    }
+    if (pit.automation_description && pit.automation_description.trim()) {
+      html += `<div style="margin-bottom:16px">
+        <div class="pit-notes-label">⚙️ Automation Details</div>
+        <div class="pit-notes-block">${pit.automation_description}</div>
+      </div>`;
+    }
+
+    if (matches.length) {
+      html += `<div style="color:#ff8601; font-weight:bold; font-size:14px; margin-bottom:12px;">📋 Individual Matches</div>`;
+    }
+
+    if (!matches.length) {
+      html += '<div class="status-msg">No match data for this team.</div>';
+    } else {
+      // Sort by match number if available
+      const sorted = [...matches].sort((a, b) => {
+        const an = parseInt(a.match_number) || 0;
+        const bn = parseInt(b.match_number) || 0;
+        return an - bn;
+      });
+
+      sorted.forEach((m, i) => {
+        const matchLabel = m.match_number ? `Match ${m.match_number}` : `Entry ${i + 1}`;
+        const climbLevel = m.climb_level || null;
+        const climbBadge = climbBadgeHtml(climbLevel);
+
+        html += `<div class="match-card">
+          <div class="match-card-header">
+            <div class="match-card-title">${matchLabel}</div>
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+              ${m.fouls         === 'yes' ? '<span class="badge badge-red">Foul</span>'        : ''}
+              ${m.auto_climb    === 'yes' ? '<span class="badge badge-green">Auto Climb</span>': ''}
+              ${climbBadge}
+            </div>
+          </div>
+          <div class="match-card-stats">
+            <div class="match-stat-chip">Teleop Fuel: <span>${m.teleop_fuel || '—'}</span></div>
+            <div class="match-stat-chip">Auto Fuel: <span>${m.auto_fuel || '—'}</span></div>
+            <div class="match-stat-chip">Shooting: <span>${m.shooting_accuracy ? m.shooting_accuracy + '/5' : '—'}</span></div>
+            <div class="match-stat-chip">Defense: <span>${m.defense_rating ? m.defense_rating + '/5' : '—'}</span></div>
+            ${m.pass_fuel          === 'yes' ? '<div class="match-stat-chip">Pass Fuel: <span>Yes</span></div>'      : ''}
+            ${m.lining_up          === 'yes' ? '<div class="match-stat-chip">Lining Up: <span>Yes</span></div>'      : ''}
+            ${m.endgame_shooting   === 'yes' ? '<div class="match-stat-chip">Endgame Shoot: <span>Yes</span></div>'  : ''}
+            ${m.scouter ? `<div class="match-stat-chip">Scouter: <span>${m.scouter}</span></div>` : ''}
+          </div>
+          ${m.notes && m.notes.trim()
+            ? `<div class="match-notes-text">💬 ${m.notes}</div>`
+            : `<div class="match-notes-none">No notes for this match.</div>`
+          }
+        </div>`;
+      });
+    }
+
+    document.getElementById('teamDetailContent').innerHTML = html;
+    document.getElementById('teamDetailCard').style.display = '';
+    document.getElementById('matchTableCard').style.display = 'none';
+  };
+
+  window.closeTeamDetail = function () {
+    document.getElementById('teamDetailCard').style.display = 'none';
+    document.getElementById('matchTableCard').style.display = '';
+  };
+
+  // ── Overview ───────────────────────────────────────────────────────────────
+  function renderOverview() {
+    const teams = Object.values(_teamStats).sort((a, b) => b.combined_score - a.combined_score);
+    if (!teams.length) {
+      document.getElementById('rankingsTable').innerHTML = '<div class="status-msg">No match data found for this event.</div>';
+      return;
+    }
+    let html = `<table>
+      <thead><tr>
+        <th>#</th>
+        <th>Team</th>
+        <th>Teleop</th>
+        <th>Auto</th>
+        <th>Climb</th>
+        <th>Best</th>
+        <th>Score</th>
+      </tr></thead><tbody>`;
+    teams.forEach((s, i) => {
+      html += `<tr>
+        <td>${i + 1}</td>
+        <td><span class="team-link" onclick="showTab('match'); openTeamDetail('${s.team}')">${s.team}</span></td>
+        <td>${s.avg_teleop_fuel}</td>
+        <td>${s.avg_auto_fuel}</td>
+        <td>${s.climb_rate}%</td>
+        <td>${climbBadgeHtml(s.best_climb)}</td>
+        <td><span class="combined-score">${s.combined_score}</span></td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('rankingsTable').innerHTML = html;
+  }
+
+  // ── Match Table ────────────────────────────────────────────────────────────
+  window.renderMatchTable = function () {
+    const sortKey = document.getElementById('matchSortSelect').value;
+    const teams = Object.values(_teamStats).sort((a, b) => {
+      if (sortKey === 'foul_rate') return a[sortKey] - b[sortKey]; // lower is better
+      return b[sortKey] - a[sortKey];
+    });
+
+    if (!teams.length) {
+      document.getElementById('matchTable').innerHTML = '<div class="status-msg">No match data found.</div>';
+      return;
+    }
+
+    let html = `<table>
+      <thead><tr>
+        <th>Team</th>
+        <th>Matches</th>
+        <th>Teleop</th>
+        <th>Auto</th>
+        <th>Climb%</th>
+        <th>Auto Climb%</th>
+        <th>Shoot</th>
+        <th>Defense</th>
+        <th>Foul%</th>
+      </tr></thead><tbody>`;
+    teams.forEach(s => {
+      html += `<tr>
+        <td><span class="team-link" onclick="openTeamDetail('${s.team}')">${s.team}</span></td>
+        <td>${s.matches}</td>
+        <td>${s.avg_teleop_fuel}</td>
+        <td>${s.avg_auto_fuel}</td>
+        <td>${s.climb_rate}%</td>
+        <td>${s.auto_climb_rate}%</td>
+        <td>${s.avg_shooting || '—'}</td>
+        <td>${s.avg_defense || '—'}</td>
+        <td>${s.foul_rate}%</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('matchTable').innerHTML = html;
+  };
+
+  // ── Pit Cards ──────────────────────────────────────────────────────────────
+  window.renderPitCards = function () {
+    const filter = document.getElementById('pitFilterSelect').value;
+    let pits = Object.values(_pitByTeam);
+
+    if (!pits.length) {
+      document.getElementById('pitCards').innerHTML = '<div class="status-msg">No pit data found.</div>';
+      return;
+    }
+
+    pits = pits.filter(p => {
+      if (filter === 'all') return true;
+      if (filter === 'swerve')        return p.drive_train === 'swerve';
+      if (filter === 'tank')          return p.drive_train === 'tank';
+      if (filter === 'auto_climb_yes')return p.auto_climb  === 'yes';
+      if (filter === 'automation_yes')return p.automation  === 'yes';
+      if (filter === 'ground_intake') return (p.intake || '').includes('ground');
+      if (filter === 'chute_intake')  return (p.intake || '').includes('chute');
+      if (filter === 'bump_yes')      return p.over_bump   === 'yes';
+      if (filter === 'trench_yes')    return p.under_trench=== 'yes';
+      if (filter === 'L3_climb')      return p.max_climb   === 'L3';
+      return true;
+    });
+
+    if (!pits.length) {
+      document.getElementById('pitCards').innerHTML = '<div class="status-msg">No teams match this filter.</div>';
+      return;
+    }
+
+    let html = '';
+    pits.forEach(p => {
+      html += `<div class="team-card">
+        <h3>Team ${p.team}</h3>
+        <div class="stat-grid">
+          <div class="stat-item"><div class="stat-label">Drive Train</div><div class="stat-value">${p.drive_train || '—'}</div></div>
+          <div class="stat-item"><div class="stat-label">Intake</div><div class="stat-value">${p.intake || '—'}</div></div>
+          <div class="stat-item"><div class="stat-label">Max Climb</div><div class="stat-value">${p.max_climb || '—'}</div></div>
+          <div class="stat-item"><div class="stat-label">Auto Climb</div><div class="stat-value">${p.auto_climb || '—'}</div></div>
+          <div class="stat-item"><div class="stat-label">Automation</div><div class="stat-value">${p.automation || '—'}</div></div>
+          <div class="stat-item"><div class="stat-label">Fuel Capacity</div><div class="stat-value">${p.fuel_capacity || '—'}</div></div>
+          <div class="stat-item"><div class="stat-label">Over Bump</div><div class="stat-value">${p.over_bump || '—'}</div></div>
+          <div class="stat-item"><div class="stat-label">Under Trench</div><div class="stat-value">${p.under_trench || '—'}</div></div>
         </div>
-        <div>
-          <div style="color:#aaa; font-weight:bold; font-size:13px; margin-bottom:6px;">Team 2</div>
-          <select id="alliancePick2" onchange="calcAlliance()">
-            <option value="">Select team...</option>
-          </select>
+        ${p.notes && p.notes.trim() ? `<div class="pit-notes-label" style="margin-top:12px">🔧 Notes</div><div class="pit-notes-block">${p.notes}</div>` : ''}
+        ${p.automation_description && p.automation_description.trim() ? `<div class="pit-notes-label" style="margin-top:10px">⚙️ Automation</div><div class="pit-notes-block">${p.automation_description}</div>` : ''}
+      </div>`;
+    });
+    document.getElementById('pitCards').innerHTML = html;
+  };
+
+  // ── Combined Table ─────────────────────────────────────────────────────────
+  window.renderCombinedTable = function () {
+    const sortKey = document.getElementById('combinedSortSelect').value;
+    const teams = Object.values(_teamStats).sort((a, b) => b[sortKey] - a[sortKey]);
+
+    if (!teams.length) {
+      document.getElementById('combinedTable').innerHTML = '<div class="status-msg">No data found.</div>';
+      return;
+    }
+
+    let html = `<table>
+      <thead><tr>
+        <th>Team</th>
+        <th>Score</th>
+        <th>Teleop</th>
+        <th>Auto</th>
+        <th>Shoot</th>
+        <th>Climb%</th>
+        <th>Drive</th>
+        <th>Intake</th>
+      </tr></thead><tbody>`;
+    teams.forEach(s => {
+      html += `<tr>
+        <td><span class="team-link" onclick="showTab('match'); openTeamDetail('${s.team}')">${s.team}</span></td>
+        <td><span class="combined-score">${s.combined_score}</span></td>
+        <td>${s.avg_teleop_fuel}</td>
+        <td>${s.avg_auto_fuel}</td>
+        <td>${s.avg_shooting || '—'}</td>
+        <td>${s.climb_rate}%</td>
+        <td>${s.drive_train}</td>
+        <td>${s.intake}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('combinedTable').innerHTML = html;
+  };
+
+  // ── Alliance Dropdowns ─────────────────────────────────────────────────────
+  function populateAllianceDropdowns() {
+    const teams = Object.values(_teamStats).sort((a, b) => Number(a.team) - Number(b.team));
+    ['alliancePick1','alliancePick2','alliancePick3'].forEach(id => {
+      const sel = document.getElementById(id);
+      const cur = sel.value;
+      sel.innerHTML = '<option value="">Select team...</option>';
+      teams.forEach(s => {
+        const o = document.createElement('option');
+        o.value = s.team;
+        o.textContent = s.team;
+        sel.appendChild(o);
+      });
+      if (cur) sel.value = cur;
+    });
+  }
+
+  window.calcAlliance = function () {
+    const picks = ['alliancePick1','alliancePick2','alliancePick3']
+      .map(id => document.getElementById(id).value)
+      .filter(v => v && _teamStats[v]);
+
+    if (!picks.length) {
+      document.getElementById('allianceResult').innerHTML = '<div class="status-msg">Select at least one team.</div>';
+      return;
+    }
+
+    const totals = picks.reduce((acc, t) => {
+      const s = _teamStats[t];
+      acc.teleop   += s.avg_teleop_fuel;
+      acc.auto     += s.avg_auto_fuel;
+      acc.shoot    += s.avg_shooting;
+      acc.defense  += s.avg_defense;
+      acc.climb    += s.climb_rate;
+      acc.score    += s.combined_score;
+      return acc;
+    }, { teleop: 0, auto: 0, shoot: 0, defense: 0, climb: 0, score: 0 });
+
+    let html = '<div class="alliance-result">';
+    picks.forEach(t => {
+      const s = _teamStats[t];
+      html += `<div class="alliance-team-row">
+        <span><b style="color:#ff8601">${t}</b></span>
+        <span>Teleop: ${s.avg_teleop_fuel} | Auto: ${s.avg_auto_fuel} | Climb: ${s.climb_rate}% | Score: ${s.combined_score}</span>
+      </div>`;
+    });
+    html += `<div class="alliance-team-row" style="margin-top:8px; padding-top:12px; border-top:2px solid #444; border-bottom:none; font-weight:bold;">
+      <span style="color:#ff8601">Alliance Total</span>
+      <span>Teleop: ${totals.teleop.toFixed(1)} | Auto: ${totals.auto.toFixed(1)} | Score: ${totals.score.toFixed(1)}</span>
+    </div>`;
+    html += '</div>';
+    document.getElementById('allianceResult').innerHTML = html;
+  };
+
+  // ── Alliance Suggestions ───────────────────────────────────────────────────
+  function renderAllianceSuggestions() {
+    const teams = Object.values(_teamStats).filter(s => String(s.team) !== '1991');
+    if (teams.length < 2) {
+      document.getElementById('allianceSuggestions').innerHTML = '<div class="status-msg">Not enough teams with match data.</div>';
+      return;
+    }
+
+    const combos = [];
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = i + 1; j < teams.length; j++) {
+        const combined = teams[i].combined_score + teams[j].combined_score;
+        combos.push({ teams: [teams[i].team, teams[j].team], combined });
+      }
+    }
+    combos.sort((a, b) => b.combined - a.combined);
+    const top3 = combos.slice(0, 3);
+    const rankLabels = ['🥇 Best Combo', '🥈 2nd Best', '🥉 3rd Best'];
+
+    let html = '';
+    top3.forEach((c, i) => {
+      const [t1, t2] = c.teams.map(t => _teamStats[t]);
+      html += `<div class="suggestion-card rank-${i + 1}">
+        <div class="suggestion-rank">${rankLabels[i]}</div>
+        <div class="suggestion-teams">Team ${c.teams[0]} + Team ${c.teams[1]}</div>
+        <div class="suggestion-stats">
+          Combined Score: <b>${c.combined.toFixed(1)}</b> &nbsp;|&nbsp;
+          Teleop: ${(t1.avg_teleop_fuel + t2.avg_teleop_fuel).toFixed(1)} &nbsp;|&nbsp;
+          Auto: ${(t1.avg_auto_fuel + t2.avg_auto_fuel).toFixed(1)} &nbsp;|&nbsp;
+          Climb: ${t1.climb_rate}% / ${t2.climb_rate}%
         </div>
-        <div>
-          <div style="color:#aaa; font-weight:bold; font-size:13px; margin-bottom:6px;">Team 3</div>
-          <select id="alliancePick3" onchange="calcAlliance()">
-            <option value="">Select team...</option>
-          </select>
-        </div>
-      </div>
-      <div id="allianceResult"><div class="status-msg">Select teams above to compare</div></div>
-    </div>
+      </div>`;
+    });
+    document.getElementById('allianceSuggestions').innerHTML = html || '<div class="status-msg">No suggestions available.</div>';
+  }
 
-    <div class="dark-card">
-      <div class="card-title">Best Alliance Suggestions for Team 1991</div>
-      <p style="color:#888; font-size:13px; margin: -8px 0 16px 0;">Top 3 partner combinations by combined score.</p>
-      <div id="allianceSuggestions"><div class="status-msg">Load data first</div></div>
-    </div>
-  </div>
+  // ── Charts ─────────────────────────────────────────────────────────────────
+  window.renderCharts = function () {
+    const metric = document.getElementById('chartMetric').value;
+    const teams = Object.values(_teamStats).sort((a, b) => b[metric] - a[metric]);
 
-  <!-- CHARTS TAB -->
-  <div id="tab-charts" style="display:none">
-    <div class="dark-card">
-      <div class="card-title">Chart Metric</div>
-      <select id="chartMetric" onchange="renderCharts()" style="margin-bottom:20px">
-        <option value="avg_teleop_fuel">Avg Teleop Fuel per Team</option>
-        <option value="avg_auto_fuel">Avg Auto Fuel per Team</option>
-        <option value="avg_shooting">Avg Shooting Accuracy</option>
-        <option value="avg_defense">Avg Defense Rating</option>
-        <option value="climb_rate">Climb Rate (%)</option>
-        <option value="auto_climb_rate">Auto Climb Rate (%)</option>
-        <option value="foul_rate">Foul Rate (%)</option>
-        <option value="pass_fuel_rate">Pass Fuel Rate (%)</option>
-        <option value="lining_up_rate">Lining Up Rate (%)</option>
-        <option value="endgame_shooting_rate">Endgame Shooting Rate (%)</option>
-        <option value="combined_score">Combined Score</option>
-        <option value="matches">Matches Scouted</option>
-      </select>
-      <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
-    </div>
-    <div class="dark-card">
-      <div class="card-title">Climb Results Breakdown</div>
-      <div style="display:flex; gap:16px; flex-wrap:wrap;">
-        <div style="flex:1; min-width:200px;"><div class="chart-wrap" style="height:220px"><canvas id="climbPieChart"></canvas></div></div>
-        <div style="flex:1; min-width:200px;"><div class="chart-wrap" style="height:220px"><canvas id="autoClimbPieChart"></canvas></div></div>
-      </div>
-    </div>
-    <div class="dark-card">
-      <div class="card-title">Drive Train Distribution (Pit)</div>
-      <div class="chart-wrap" style="height:220px"><canvas id="driveChart"></canvas></div>
-    </div>
-    <div class="dark-card">
-      <div class="card-title">Intake Type Distribution (Pit)</div>
-      <div class="chart-wrap" style="height:220px"><canvas id="intakeChart"></canvas></div>
-    </div>
-    <div class="dark-card">
-      <div class="card-title">Automation Usage (Pit)</div>
-      <div class="chart-wrap" style="height:220px"><canvas id="automationChart"></canvas></div>
-    </div>
-  </div>
+    if (!teams.length) return;
 
-  <footer>Developed by Catie | Team 1991</footer>
+    const labels = teams.map(s => s.team);
+    const values = teams.map(s => s[metric]);
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyB3wq_x0FMP5q9FnKa_ppTCiVI_OijTDEU",
-      authDomain: "dragon-bdc86.firebaseapp.com",
-      projectId: "dragon-bdc86",
-      storageBucket: "dragon-bdc86.firebasestorage.app",
-      messagingSenderId: "516398791570",
-      appId: "1:516398791570:web:11063eaac685b9ad29df4b"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    let teamsData = {};
-    fetch('teams.json')
-      .then(r => r.json())
-      .then(d => { teamsData = d; })
-      .catch(e => console.error('teams.json error:', e));
-
-    document.getElementById('eventSelect').addEventListener('change', function () {
-      const eventKey = this.value;
-      const teamSel = document.getElementById('teamSelect');
-      teamSel.innerHTML = '<option value="">All Teams</option>';
-      if (eventKey && teamsData[eventKey]) {
-        teamsData[eventKey].forEach(t => {
-          const o = document.createElement('option');
-          o.value = t.number;
-          o.textContent = `${t.number} – ${t.name}`;
-          teamSel.appendChild(o);
-        });
-        teamSel.disabled = false;
-      } else {
-        teamSel.disabled = true;
+    _chartInstance = destroyChart(_chartInstance);
+    const ctx = document.getElementById('mainChart').getContext('2d');
+    _chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: metric,
+          data: values,
+          backgroundColor: '#ff8601',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#aaa' }, grid: { color: '#222' } },
+          y: { ticks: { color: '#aaa' }, grid: { color: '#222' } }
+        }
       }
     });
 
-    window._matchDocs = [];
-    window._pitDocs = [];
-    window._teamStats = {};
-    window._pitByTeam = {};
-    window._matchesByTeam = {};
-    window._chartInstance = null;
-    window._climbPie = null;
-    window._autoClimbPie = null;
-    window._driveChart = null;
-    window._intakeChart = null;
-    window._automationChart = null;
-
-    window.loadData = async function () {
-      const eventKey = document.getElementById('eventSelect').value;
-      const teamFilter = document.getElementById('teamSelect').value;
-      if (!eventKey) { alert('Please select an event first.'); return; }
-
-      const btn = document.getElementById('loadBtn');
-      btn.disabled = true;
-      btn.textContent = 'Loading...';
-
-      try {
-        const mQuery = query(collection(db, "match_scouting"), where("event", "==", eventKey));
-        const mSnap = await getDocs(mQuery);
-        let matchDocs = mSnap.docs.map(d => d.data());
-
-        const pQuery = query(collection(db, "pit_scouting"), where("event", "==", eventKey));
-        const pSnap = await getDocs(pQuery);
-        let pitDocs = pSnap.docs.map(d => d.data());
-
-        if (teamFilter) {
-          matchDocs = matchDocs.filter(d => String(d.team) === String(teamFilter));
-          pitDocs = pitDocs.filter(d => String(d.team) === String(teamFilter));
+    // Climb pie
+    const climbCounts = { L3: 0, L2: 0, L1: 0, attempted_failed: 0, not_attempted: 0 };
+    _matchDocs.forEach(m => { if (m.climb_level) climbCounts[m.climb_level] = (climbCounts[m.climb_level] || 0) + 1; });
+    _climbPie = destroyChart(_climbPie);
+    _climbPie = new Chart(document.getElementById('climbPieChart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(climbCounts),
+        datasets: [{ data: Object.values(climbCounts), backgroundColor: ['#4caf50','#2196f3','#ff8601','#f44336','#555'] }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#aaa', font: { size: 11 } } },
+          title: { display: true, text: 'Endgame Climb', color: '#ff8601' }
         }
+      }
+    });
 
-        window._matchDocs = matchDocs;
-        window._pitDocs = pitDocs;
-
-        // Group raw match docs by team for individual match view
-        const matchesByTeam = {};
-        matchDocs.forEach(d => {
-          if (!d.team) return;
-          if (!matchesByTeam[d.team]) matchesByTeam[d.team] = [];
-          matchesByTeam[d.team].push(d);
-        });
-        window._matchesByTeam = matchesByTeam;
-
-        const pitByTeam = {};
-        pitDocs.forEach(d => { if (d.team) pitByTeam[d.team] = d; });
-        window._pitByTeam = pitByTeam;
-
-        const stats = {};
-        matchDocs.forEach(d => {
-          const t = d.team;
-          if (!t) return;
-          if (!stats[t]) stats[t] = {
-            team: t, matches: 0,
-            teleop_fuel_total: 0, auto_fuel_total: 0,
-            shoot_total: 0, shoot_count: 0,
-            defense_total: 0, defense_count: 0,
-            climbs: {}, auto_climbs: 0,
-            fouls: 0, lining_up: 0,
-            pass_fuel: 0, endgame_shooting: 0
-          };
-          const s = stats[t];
-          s.matches++;
-          s.teleop_fuel_total += rangeMid(d.teleop_fuel);
-          s.auto_fuel_total += rangeMid(d.auto_fuel);
-          if (d.shooting_accuracy) { s.shoot_total += parseInt(d.shooting_accuracy); s.shoot_count++; }
-          if (d.defense_rating) { s.defense_total += parseInt(d.defense_rating); s.defense_count++; }
-          if (d.climb_level) s.climbs[d.climb_level] = (s.climbs[d.climb_level] || 0) + 1;
-          if (d.auto_climb === 'yes') s.auto_climbs++;
-          if (d.fouls === 'yes') s.fouls++;
-          if (d.lining_up === 'yes') s.lining_up++;
-          if (d.pass_fuel === 'yes') s.pass_fuel++;
-          if (d.endgame_shooting === 'yes') s.endgame_shooting++;
-        });
-
-        Object.values(stats).forEach(s => {
-          s.avg_teleop_fuel = s.matches ? +(s.teleop_fuel_total / s.matches).toFixed(1) : 0;
-          s.avg_auto_fuel = s.matches ? +(s.auto_fuel_total / s.matches).toFixed(1) : 0;
-          s.avg_shooting = s.shoot_count ? +(s.shoot_total / s.shoot_count).toFixed(2) : 0;
-          s.avg_defense = s.defense_count ? +(s.defense_total / s.defense_count).toFixed(2) : 0;
-          const climbAttempts = Object.entries(s.climbs).filter(([k]) => k !== 'not_attempted').reduce((a, [, v]) => a + v, 0);
-          s.climb_rate = s.matches ? +((climbAttempts / s.matches) * 100).toFixed(0) : 0;
-          s.auto_climb_rate = s.matches ? +((s.auto_climbs / s.matches) * 100).toFixed(0) : 0;
-          s.foul_rate = s.matches ? +((s.fouls / s.matches) * 100).toFixed(0) : 0;
-          s.lining_up_rate = s.matches ? +((s.lining_up / s.matches) * 100).toFixed(0) : 0;
-          s.pass_fuel_rate = s.matches ? +((s.pass_fuel / s.matches) * 100).toFixed(0) : 0;
-          s.endgame_shooting_rate = s.matches ? +((s.endgame_shooting / s.matches) * 100).toFixed(0) : 0;
-          s.best_climb = bestClimb(s.climbs);
-
-          const pit = pitByTeam[s.team] || {};
-          const fuelCapBonus = pit.fuel_capacity ? Math.min(parseInt(pit.fuel_capacity) / 10, 5) : 0;
-          s.fuel_capacity = pit.fuel_capacity || '—';
-          s.drive_train = pit.drive_train || '—';
-          s.automation = pit.automation || '—';
-          s.intake = pit.intake || '—';
-
-          s.combined_score = +(
-            (s.avg_teleop_fuel * 1.0) +
-            (s.avg_auto_fuel * 1.5) +
-            (s.avg_shooting * 3) +
-            (s.climb_rate * 0.1) +
-            (s.auto_climb_rate * 0.15) +
-            fuelCapBonus -
-            (s.foul_rate * 0.05)
-          ).toFixed(1);
-        });
-
-        window._teamStats = stats;
-
-        // If a specific team was selected, jump straight to their detail view
-        if (teamFilter && stats[teamFilter]) {
-          showTab('match');
-          openTeamDetail(teamFilter);
+    // Auto climb pie
+    const autoY = _matchDocs.filter(m => m.auto_climb === 'yes').length;
+    const autoN = _matchDocs.length - autoY;
+    _autoClimbPie = destroyChart(_autoClimbPie);
+    _autoClimbPie = new Chart(document.getElementById('autoClimbPieChart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Auto Climb Yes', 'No'],
+        datasets: [{ data: [autoY, autoN], backgroundColor: ['#4caf50','#555'] }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#aaa', font: { size: 11 } } },
+          title: { display: true, text: 'Auto Climb', color: '#ff8601' }
         }
-
-        populateAllianceDropdowns();
-        renderOverview();
-        renderMatchTable();
-        renderPitCards();
-        renderCombinedTable();
-        renderAllianceSuggestions();
-        renderCharts();
-
-      } catch (err) {
-        alert('Error loading data: ' + err.message);
       }
+    });
 
-      btn.disabled = false;
-      btn.textContent = 'Load Data';
-    };
-
-    function rangeMid(val) {
-      if (!val) return 0;
-      if (val === '100+') return 105;
-      if (val === '30+') return 33;
-      const parts = val.split('-');
-      if (parts.length === 2) return (parseInt(parts[0]) + parseInt(parts[1])) / 2;
-      return parseInt(val) || 0;
-    }
-
-    function bestClimb(climbs) {
-      const order = ['L3', 'L2', 'L1', 'attempted_failed', 'not_attempted'];
-      for (const c of order) { if (climbs[c]) return c; }
-      return '—';
-    }
-
-    // ── TEAM DETAIL VIEW ──────────────────────────────────────────────────────
-
-    window.openTeamDetail = function (teamNum) {
-      const matches = window._matchesByTeam[teamNum] || [];
-      const stats = window._teamStats[teamNum] || {};
-      const pit = window._pitByTeam[teamNum] || {};
-
-      document.getElementById('teamDetailTitle').textContent = `Team ${teamNum}`;
-      document.getElementById('teamDetailSummary').textContent =
-        `${matches.length} match${matches.length !== 1 ? 'es' : ''} scouted · Avg Teleop: ${stats.avg_teleop_fuel || 0} · Avg Auto: ${stats.avg_auto_fuel || 0} · Climb: ${stats.climb_rate || 0}%`;
-
-      let html = '';
-
-      // Pit notes at the top if they exist
-      if (pit.notes && pit.notes.trim()) {
-        html += `<div style="margin-bottom:16px">
-          <div class="pit-notes-label">🔧 Pit Scouting Notes</div>
-          <div class="pit-notes-block">${pit.notes}</div>
-        </div>`;
+    // Drive train pie
+    const driveCounts = {};
+    Object.values(_pitByTeam).forEach(p => {
+      const dt = p.drive_train || 'unknown';
+      driveCounts[dt] = (driveCounts[dt] || 0) + 1;
+    });
+    _driveChart = destroyChart(_driveChart);
+    _driveChart = new Chart(document.getElementById('driveChart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(driveCounts),
+        datasets: [{ data: Object.values(driveCounts), backgroundColor: ['#ff8601','#2196f3','#4caf50','#f44336','#9c27b0'] }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#aaa', font: { size: 11 } } } }
       }
-      if (pit.automation_description && pit.automation_description.trim()) {
-        html += `<div style="margin-bottom:16px">
-          <div class="pit-notes-label">⚙️ Automation Details</div>
-          <div class="pit-notes-block">${pit.automation_description}</div>
-        </div>`;
+    });
+
+    // Intake pie
+    const intakeCounts = {};
+    Object.values(_pitByTeam).forEach(p => {
+      const it = p.intake || 'unknown';
+      intakeCounts[it] = (intakeCounts[it] || 0) + 1;
+    });
+    _intakeChart = destroyChart(_intakeChart);
+    _intakeChart = new Chart(document.getElementById('intakeChart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(intakeCounts),
+        datasets: [{ data: Object.values(intakeCounts), backgroundColor: ['#ff8601','#2196f3','#4caf50','#f44336','#9c27b0','#00bcd4'] }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#aaa', font: { size: 11 } } } }
       }
+    });
 
-      // Divider
-      if (matches.length) {
-        html += `<div style="color:#ff8601; font-weight:bold; font-size:14px; margin-bottom:12px;">📋 Individual Matches</div>`;
+    // Automation pie
+    const autoCounts = {};
+    Object.values(_pitByTeam).forEach(p => {
+      const a = p.automation || 'unknown';
+      autoCounts[a] = (autoCounts[a] || 0) + 1;
+    });
+    _automationChart = destroyChart(_automationChart);
+    _automationChart = new Chart(document.getElementById('automationChart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(autoCounts),
+        datasets: [{ data: Object.values(autoCounts), backgroundColor: ['#4caf50','#f44336','#555'] }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#aaa', font: { size: 11 } } } }
       }
+    });
+  };
 
-      if (!matches.length) {
-        html += '<div class="status-msg">No match data for this team.</div>';
-      } else {
-        matches.forEach((m, i) => {
-          const matchLabel = m.match_number ? `Match ${m.match_number}` : `Entry ${i + 1}`;
-
-          const climbLevel = m.climb_level || null;
-          const climbBadgeClass = climbLevel === 'L3' ? 'badge-green' : climbLevel === 'L2' ? 'badge-blue' : climbLevel === 'L1' ? 'badge-orange' : 'badge-red';
-          const climbBadge = climbLevel ? `<span class="badge ${climbBadgeClass}">${climbLevel}</span>` : '';
-
-          html += `<div class="match-card">
-            <div class="match-card-header">
-              <div class="match-card-title">${matchLabel}</div>
-              <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-                ${m.fouls === 'yes' ? '<span class="badge badge-red">Foul</span>' : ''}
-                ${m.auto_climb === 'yes' ? '<span class="badge badge-green">Auto Climb</span>' : ''}
-                ${climbBadge}
-              </div>
-            </div>
-            <div class="match-card-stats">
-              <div class="match-stat-chip">Teleop Fuel: <span>${m.teleop_fuel || '—'}</span></div>
-              <div class="match-stat-chip">Auto Fuel: <span>${m.auto_fuel || '—'}</span></div>
-              <div class="match-stat-chip">Shooting: <span>${m.shooting_accuracy ? m.shooting_accuracy + '/5' : '—'}</span></div>
-              <div class="match-stat-chip">Defense: <span>${m.defense_rating ? m.defense_rating + '/5' : '—'}</span></div>
-              ${m.pass_fuel === 'yes' ? '<div class="match-stat-chip">Pass Fuel: <span>Yes</span></div>' : ''}
-              ${m.lining_up === 'yes' ? '<div class="match-stat-chip">Lining Up: <span>Yes</span></div>' : ''}
-              ${m.endgame_shooting === 'yes' ? '<div class="match-stat-chip">Endgame Shoot: <span>Yes</span></div>' : ''}
-              ${m.scouter ? `<div class="match-stat-chip">Scouter: <span>${m.scouter}</span></div>` : ''}
-            </div>
-            ${m.notes && m.notes.trim()
-              ? `<div class="match-notes-text">💬 ${m.notes}</div>`
-              : `<div class="match-notes-none">No notes for this match.</div>`
-            }
-          </div>`;
-        });
-      }
-
-      document.getElementById('teamDetailContent').innerHTML = html;
+</script>
+</body>
+</html>
